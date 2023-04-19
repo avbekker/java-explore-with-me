@@ -27,7 +27,7 @@ public class StatController {
     @GetMapping("/stats")
     public List<StatDto> get(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                             @RequestParam(required = false) List<String> uriList,
+                             @RequestParam(value = "uris", required = false) List<String> uriList,
                              @RequestParam(defaultValue = "false") boolean unique) {
         log.info("StatController: Received GET request.");
         return service.get(start, end, uriList, unique);
