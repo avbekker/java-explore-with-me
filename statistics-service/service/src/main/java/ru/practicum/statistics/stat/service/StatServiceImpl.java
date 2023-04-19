@@ -14,10 +14,11 @@ import java.util.List;
 
 import static ru.practicum.statistics.stat.mapper.StatMapper.toStat;
 
+@Transactional(readOnly = true)
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StatServiceImpl implements StatService {
+class StatServiceImpl implements StatService {
 
     private final StatRepository repository;
 
@@ -29,15 +30,20 @@ public class StatServiceImpl implements StatService {
         repository.save(stat);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<StatDto> get(LocalDateTime start, LocalDateTime end, List<String> uriList, boolean unique) {
-        List<StatDto> result;
         if (unique) {
-            result = repository.statisticsWithUnique(start, end, uriList);
+            if (uriList == null) {
+                return repository.statisticsWithUniqueWithoutUri(start, end);
+            } else {
+                return repository.statisticsWithUnique(start, end, uriList);
+            }
         } else {
-            result = repository.statisticsWithoutUnique(start, end, uriList);
+            if (uriList == null) {
+                return repository.statisticsWithoutUniqueWithoutUri(start, end);
+            } else {
+                return repository.statisticsWithoutUnique(start, end, uriList);
+            }
         }
-        return result;
     }
 }
