@@ -20,8 +20,8 @@ services:
       - "6541:5432"
     environment:
       - POSTGRES_DB=stats
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=iamroot
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
 
 
   ewm-service:
@@ -31,9 +31,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - main-db
+      - ewm-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/main
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/main
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=iamroot
 
@@ -44,5 +44,5 @@ services:
       - "6542:5432"
     environment:
       - POSTGRES_DB=main
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=iamroot
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root

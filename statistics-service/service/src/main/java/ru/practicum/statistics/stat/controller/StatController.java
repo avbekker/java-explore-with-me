@@ -3,8 +3,12 @@ package ru.practicum.statistics.stat.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.StatDto;
 import ru.practicum.statistics.stat.service.StatService;
@@ -12,7 +16,7 @@ import ru.practicum.statistics.stat.service.StatService;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RestController
+@Controller
 @Slf4j
 @RequiredArgsConstructor
 public class StatController {
@@ -29,7 +33,7 @@ public class StatController {
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                              @RequestParam(required = false) List<String> uriList,
                              @RequestParam(defaultValue = "false") boolean unique) {
-        log.info("StatController: Received GET request for {} URIs, unique = {}, from {}, to {}", uriList.size(), unique, start, end);
+        log.info("StatController: Received GET request.");
         return service.get(start, end, uriList, unique);
     }
 }
