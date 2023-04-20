@@ -27,17 +27,41 @@ public class HitsClient extends BaseClient {
     }
 
     public ResponseEntity<Object> create(HitDto hitDto) {
-        return post(hitDto);
+        String path = "/hit";
+        return post(hitDto, path);
     }
 
     public ResponseEntity<Object> get(LocalDateTime start, LocalDateTime end, List<String> uriList, Boolean unique) {
         String path = "/stats";
-        Map<String, Object> parameters = Map.of(
-                "start", start,
-                "end", end,
-                "uris", uriList,
-                "unique", unique
-        );
-        return get(path + "?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+        Map<String, Object> parameters;
+        if (unique == null) {
+            if (uriList == null || uriList.isEmpty()) {
+                parameters = Map.of(
+                        "start", start,
+                        "end", end);
+                return get(path + "?start={start}&end={end}", parameters);
+            } else {
+                parameters = Map.of(
+                        "start", start,
+                        "end", end,
+                        "uris", String.join(",", uriList));
+                return get(path + "?start={start}&end={end}&uris={uris}", parameters);
+            }
+        } else {
+            if (uriList == null || uriList.isEmpty()) {
+                parameters = Map.of(
+                        "start", start,
+                        "end", end,
+                        "unique", unique);
+                return get(path + "?start={start}&end={end}&unique={unique}", parameters);
+            } else {
+                parameters = Map.of(
+                        "start", start,
+                        "end", end,
+                        "uris", String.join(",", uriList),
+                        "unique", unique);
+                return get(path + "?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+            }
+        }
     }
 }

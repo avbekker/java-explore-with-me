@@ -20,8 +20,8 @@ public class BaseClient {
         return makeAndSendRequest(HttpMethod.GET, path, parameters, null);
     }
 
-    protected <T> ResponseEntity<Object> post(T body) {
-        return makeAndSendRequest(HttpMethod.POST, "/hit", null, body);
+    protected <T> ResponseEntity<Object> post(T body, String path) {
+        return makeAndSendRequest(HttpMethod.POST, path, null, body);
     }
 
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, @Nullable Map<String, Object> parameters, @Nullable T body) {
