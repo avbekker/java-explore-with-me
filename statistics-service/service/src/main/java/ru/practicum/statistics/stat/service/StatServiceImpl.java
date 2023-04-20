@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.StatDto;
+import ru.practicum.statistics.excemption.StartEndTimeException;
 import ru.practicum.statistics.stat.model.Stat;
 import ru.practicum.statistics.stat.repository.StatRepository;
 
@@ -32,6 +33,9 @@ class StatServiceImpl implements StatService {
 
     @Override
     public List<StatDto> get(LocalDateTime start, LocalDateTime end, List<String> uriList, boolean unique) {
+        if (end.isBefore(start)) {
+            throw new StartEndTimeException("End time cannot be before start time.");
+        }
         if (unique) {
             if (uriList == null) {
                 return repository.statisticsWithUniqueWithoutUri(start, end);
