@@ -1,9 +1,6 @@
 package ru.practicum.main.locations.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,10 +8,11 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "LOCATION")
+@Table(name = "LOCATIONS")
 public class Location {
     @Id
     private Float lat;
