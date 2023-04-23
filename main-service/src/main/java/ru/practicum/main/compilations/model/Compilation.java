@@ -1,9 +1,6 @@
 package ru.practicum.main.compilations.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.main.events.model.Event;
 
 import javax.persistence.*;
@@ -11,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
