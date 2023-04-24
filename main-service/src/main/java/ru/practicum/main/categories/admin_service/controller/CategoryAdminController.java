@@ -1,4 +1,4 @@
-package ru.practicum.main.categories.admin.controller;
+package ru.practicum.main.categories.admin_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.main.categories.admin.service.CategoryAdminService;
+import ru.practicum.main.categories.admin_service.service.CategoryAdminService;
 import ru.practicum.main.categories.dto.NewCategoryDto;
 
 import javax.servlet.http.HttpServletRequest;

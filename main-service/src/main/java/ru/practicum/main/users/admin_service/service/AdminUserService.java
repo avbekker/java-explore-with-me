@@ -1,4 +1,4 @@
-package ru.practicum.main.users.admin.service;
+package ru.practicum.main.users.admin_service.service;
 
 import ru.practicum.main.users.dto.NewUserRequest;
 import ru.practicum.main.users.dto.UserDto;

@@ -1,4 +1,4 @@
-package ru.practicum.main.compilations.admin.service;
+package ru.practicum.main.compilations.admin_service.service;
 
 import org.springframework.stereotype.Service;
 import ru.practicum.main.compilations.dto.CompilationDto;

@@ -1,9 +1,6 @@
 package ru.practicum.main.requests.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.main.enums.Status;
 import ru.practicum.main.events.model.Event;
 import ru.practicum.main.users.model.User;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
