@@ -34,8 +34,8 @@ import static ru.practicum.main_service.locations.mapper.LocationMapper.toLocati
 @Slf4j
 public class EventsAdminServiceImpl implements EventsAdminService {
     private final EventsRepository eventsRepository;
-    private final RequestsRepository requestsRepository;
     private final CategoriesRepository categoriesRepository;
+    private final RequestsRepository requestsRepository;
     private final StatisticsClient statisticsClient;
 
     @Override
