@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID", nullable = false)
+    @Column(name = "ID", nullable = false)
     Long id;
     String name;
     String email;
