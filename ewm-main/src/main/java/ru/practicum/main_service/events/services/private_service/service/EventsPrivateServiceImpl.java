@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.categories.model.Category;
 import ru.practicum.main_service.categories.repository.CategoriesRepository;
+import ru.practicum.main_service.collaboration.StatsService;
 import ru.practicum.main_service.enums.State;
 import ru.practicum.main_service.enums.Status;
 import ru.practicum.main_service.events.dto.*;
@@ -21,13 +22,10 @@ import ru.practicum.main_service.requests.model.Request;
 import ru.practicum.main_service.requests.repository.RequestsRepository;
 import ru.practicum.main_service.users.model.User;
 import ru.practicum.main_service.users.repository.UserRepository;
-import ru.practicum.stats_client.StatisticsClient;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.*;
@@ -44,15 +42,15 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
     private final UserRepository usersRepository;
     private final CategoriesRepository categoriesRepository;
     private final RequestsRepository requestsRepository;
-    private final StatisticsClient statisticsClient;
+    private final StatsService statsService;
 
     @Override
     public List<EventShortDto> getByUser(Long userId, Integer from, Integer size) {
         User user = usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         List<Event> events = eventsRepository.findByInitiator(user, PageRequest.of(from / size, size)).getContent();
-        Map<Long, Long> views = getViewsByEvents(events);
-        Map<Long, Long> confirmationRequests = getRequestsByEvents(events);
+        Map<Long, Long> views = statsService.getViewsByEvents(events);
+        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         log.info("EventsPrivateServiceImpl: Get events by user id = {} from {} size {}", userId, from, size);
         return toEventShortDtoList(events, confirmationRequests, views);
     }
@@ -77,7 +75,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        Long views = getViewsByEvents(List.of(event)).get(eventId);
+        Long views = statsService.getViewsByEvents(List.of(event)).get(eventId);
         log.info("EventsPrivateServiceImpl: Get event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
@@ -92,7 +90,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         if (!event.getState().equals(State.PENDING)) {
             throw new BadRequestException("Event id = " + eventId + " is not in pending status.");
         }
-        Long views = getViewsByEvents(List.of(event)).get(eventId);
+        Long views = statsService.getViewsByEvents(List.of(event)).get(eventId);
         long confirmedRequests = requestsRepository.findByEvent(event).size();
         if (updateEvent.getAnnotation() != null && !updateEvent.getAnnotation().isBlank()) {
             event.setAnnotation(updateEvent.getAnnotation());
@@ -173,23 +171,6 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         log.info("EventsPrivateServiceImpl: Update request of event id = {}", eventId);
         return toEventRequestStatusUpdateResult(toParticipationRequestDtoList(confirmedRequests),
                 toParticipationRequestDtoList(rejectedRequests));
-    }
-
-    private Map<Long, Long> getViewsByEvents(List<Event> events) {
-        LocalDateTime start = events.stream().map(Event::getPublishedOn).filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo).orElse(null);
-        List<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toList());
-        return statisticsClient.getViews(eventIds, start);
-    }
-
-    private Map<Long, Long> getRequestsByEvents(List<Event> events) {
-        Map<Long, Long> confirmedRequestsByEvents = new HashMap<>();
-        long confirmationRequests;
-        for (Event event : events) {
-            confirmationRequests = requestsRepository.findByEvent(event).size();
-            confirmedRequestsByEvents.put(event.getId(), confirmationRequests);
-        }
-        return confirmedRequestsByEvents;
     }
 
     private List<Request> filterRequestsByStatus(List<Request> requests, Status status) {
