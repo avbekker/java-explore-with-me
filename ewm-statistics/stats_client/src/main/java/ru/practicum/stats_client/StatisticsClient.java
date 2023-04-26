@@ -1,7 +1,6 @@
 package ru.practicum.stats_client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -12,16 +11,12 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.ViewStatDto;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StatisticsClient extends BaseClient {
-    ObjectMapper objectMapper = new ObjectMapper();
-
     @Autowired
     public StatisticsClient(@Value("${statistics-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
@@ -37,7 +32,7 @@ public class StatisticsClient extends BaseClient {
         return post(hitDto, path);
     }
 
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uriList, Boolean unique) {
+    public ResponseEntity<Object> getStats(String start, String end, List<String> uriList, Boolean unique) {
         String path = "/stats";
         Map<String, Object> parameters;
         if (unique == null) {
@@ -71,21 +66,11 @@ public class StatisticsClient extends BaseClient {
         }
     }
 
-    public Map<Long, Long> getViews(List<Long> eventsIds, LocalDateTime start) {
-        if (start == null) {
-            return Collections.emptyMap();
-        }
-        List<String> uris = eventsIds.stream().map(id -> "/events/" + id).collect(Collectors.toList());
-        ResponseEntity<Object> statsDto = getStats(start, LocalDateTime.now(), uris, false);
-        if (statsDto == null) {
-            return Collections.emptyMap();
-        }
-        List<ViewStatDto> result = objectMapper.convertValue(statsDto, new TypeReference<>() {
-        });
-        if (result.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        return result.stream().collect(Collectors.toMap(statDto -> Long.parseLong(statDto.getUri().substring(8)),
-                ViewStatDto::getHits));
+    public List<ViewStatDto> getViews(String start, String end, List<String> uriList) {
+        Gson gson = new Gson();
+        ResponseEntity<Object> viewsObject = getStats(start, end, uriList, false);
+        String json = gson.toJson(viewsObject.getBody());
+        ViewStatDto[] viewsArray = gson.fromJson(json, ViewStatDto[].class);
+        return Arrays.asList(viewsArray);
     }
 }

@@ -26,6 +26,7 @@ import ru.practicum.main_service.users.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.*;
@@ -49,10 +50,10 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         User user = usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         List<Event> events = eventsRepository.findByInitiator(user, PageRequest.of(from / size, size)).getContent();
-        Map<Long, Long> views = statsService.getViewsByEvents(events);
+        Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         log.info("EventsPrivateServiceImpl: Get events by user id = {} from {} size {}", userId, from, size);
-        return toEventShortDtoList(events, confirmationRequests, views);
+        return toEventShortDtoList(events, views, confirmationRequests);
     }
 
     @Transactional
@@ -75,7 +76,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        Long views = statsService.getViewsByEvents(List.of(event)).get(eventId);
+        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         log.info("EventsPrivateServiceImpl: Get event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
@@ -90,42 +91,31 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         if (!event.getState().equals(State.PENDING)) {
             throw new BadRequestException("Event id = " + eventId + " is not in pending status.");
         }
-        Long views = statsService.getViewsByEvents(List.of(event)).get(eventId);
+        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        if (updateEvent.getAnnotation() != null && !updateEvent.getAnnotation().isBlank()) {
-            event.setAnnotation(updateEvent.getAnnotation());
+        if (updateEvent.getEventDate() != null) {
+            if (LocalDateTime.now().isBefore(updateEvent.getEventDate().plusHours(2))) {
+                event.setEventDate(updateEvent.getEventDate());
+            } else {
+                throw new BadRequestException("Event start date invalid.");
+            }
         }
+        event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
+        event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
+        event.setPaid(Objects.requireNonNullElse(updateEvent.getPaid(), event.getPaid()));
+        event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
+        event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
+        event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
         if (updateEvent.getCategory() != null) {
             Category category = categoriesRepository.findById(updateEvent.getCategory())
                     .orElseThrow(() -> new NotFoundException("Category with id = " +
                             updateEvent.getCategory() + " not found."));
             event.setCategory(category);
         }
-        if (updateEvent.getDescription() != null && !updateEvent.getDescription().isBlank()) {
-            event.setDescription(updateEvent.getDescription());
-        }
-        if (updateEvent.getEventDate() != null) {
-            if (LocalDateTime.now().isBefore(updateEvent.getEventDate())) {
-                event.setEventDate(updateEvent.getEventDate());
-            } else {
-                throw new BadRequestException("Event start date invalid.");
-            }
-        }
         if (updateEvent.getLocation() != null) {
             event.setLocation(toLocation(updateEvent.getLocation()));
         }
-        if (updateEvent.getPaid() != null) {
-            event.setPaid(updateEvent.getPaid());
-        }
-        if (updateEvent.getParticipantLimit() != null) {
-            event.setParticipantLimit(updateEvent.getParticipantLimit());
-        }
-        if (updateEvent.getRequestModeration() != null) {
-            event.setRequestModeration(updateEvent.getRequestModeration());
-        }
-        if (updateEvent.getTitle() != null && !updateEvent.getTitle().isBlank()) {
-            event.setTitle(updateEvent.getTitle());
-        }
+
         log.info("EventsPrivateServiceImpl: Update event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
@@ -143,21 +133,17 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
 
     @Override
     public EventRequestStatusUpdateResult updateRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest newRequest) {
-        User user = usersRepository.findById(userId)
+        if (newRequest == null) {
+            throw new BadRequestException("Bad request.");
+        }
+        usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
-        Event event = eventsRepository.findByInitiatorAndId(user, eventId)
+        Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
-        List<Request> request = requestsRepository
-                .findByEventAndIdInAndStatus(event, newRequest.getRequestIds(), Status.PENDING);
-        if (request.size() != newRequest.getRequestIds().size()) {
-            throw new BadRequestException("Request cannot be updated." + request.size() + " " + newRequest.getRequestIds().size());
-        }
-        for (Request r : request) {
-            r.setStatus(newRequest.getStatus());
-        }
-        List<Request> requests = requestsRepository.findByEvent(event);
+        List<Request> requests = requestsRepository.findAllByIdInAndEventId(newRequest.getRequestIds(), eventId);
         List<Request> confirmedRequests = filterRequestsByStatus(requests, Status.CONFIRMED);
         List<Request> rejectedRequests = filterRequestsByStatus(requests, Status.REJECTED);
+
         if (event.getParticipantLimit() > 0 || event.isRequestModeration()) {
             if (confirmedRequests.size() > event.getParticipantLimit()) {
                 throw new BadRequestException("Participation limit reached.");

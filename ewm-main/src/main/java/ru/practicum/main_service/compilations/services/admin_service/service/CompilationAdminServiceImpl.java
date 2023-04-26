@@ -45,7 +45,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
         List<Event> events = eventsRepository.findByIdIn(newCompilationDto.getEvents());
         compilation = toCompilation(newCompilationDto, events);
         compilationRepository.save(compilation);
-        Map<Long, Long> views = statsService.getViewsByEvents(events);
+        Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
         log.info("CompilationAdminServiceImpl: New compilation created.");
@@ -61,7 +61,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
         if (updateCompilationRequest.getEvents() != null) {
             events = eventsRepository.findByIdInAndState(updateCompilationRequest.getEvents(), State.PUBLISHED);
         }
-        Map<Long, Long> views = statsService.getViewsByEvents(events);
+        Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
         compilation.setEvents(events);

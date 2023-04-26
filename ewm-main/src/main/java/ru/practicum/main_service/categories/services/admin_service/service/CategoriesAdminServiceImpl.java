@@ -13,7 +13,6 @@ import ru.practicum.main_service.events.repository.EventsRepository;
 import ru.practicum.main_service.excemptions.BadRequestException;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCategory;
@@ -28,7 +27,7 @@ public class CategoriesAdminServiceImpl implements CategoryAdminService {
 
     @Transactional
     @Override
-    public CategoryDto create(NewCategoryDto newCategoryDto, HttpServletRequest httpServletRequest) {
+    public CategoryDto create(NewCategoryDto newCategoryDto) {
         Category category = toCategory(newCategoryDto);
         CategoryDto result = toCategoryDto(categoriesRepository.save(category));
         log.info("CategoriesAdminService: new category {} {} created.", result.getId(), result.getName());
@@ -37,7 +36,7 @@ public class CategoriesAdminServiceImpl implements CategoryAdminService {
 
     @Transactional
     @Override
-    public CategoryDto update(Long categoryId, NewCategoryDto newCategoryDto, HttpServletRequest request) {
+    public CategoryDto update(Long categoryId, NewCategoryDto newCategoryDto) {
         Category newCategory = toCategory(newCategoryDto);
         Category result = categoriesRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category with id = " + categoryId + " not founded."));
@@ -48,7 +47,7 @@ public class CategoriesAdminServiceImpl implements CategoryAdminService {
 
     @Transactional
     @Override
-    public void delete(Long categoryId, HttpServletRequest request) {
+    public void delete(Long categoryId) {
         Optional<Event> event = eventsRepository.findByCategoryId(categoryId);
         if (event.isEmpty()) {
             categoriesRepository.deleteById(categoryId);

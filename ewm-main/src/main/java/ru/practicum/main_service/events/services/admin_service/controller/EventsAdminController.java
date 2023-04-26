@@ -36,8 +36,8 @@ public class EventsAdminController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<Object> edit(@PathVariable Long eventId,
-                                       @Validated @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
+    public ResponseEntity<Object> update(@PathVariable Long eventId,
+                                         @Validated @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("EventsAdminController: PATCH request received for event id = {}.", eventId);
         return new ResponseEntity<>(service.update(eventId, updateEventAdminRequest), HttpStatus.OK);
     }

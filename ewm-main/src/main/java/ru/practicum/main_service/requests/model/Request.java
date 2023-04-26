@@ -1,5 +1,6 @@
 package ru.practicum.main_service.requests.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.main_service.enums.Status;
 import ru.practicum.main_service.events.model.Event;
@@ -21,6 +22,7 @@ public class Request {
     @Column(nullable = false)
     private Long id;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;
 
     @ManyToOne

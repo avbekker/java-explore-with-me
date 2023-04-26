@@ -3,15 +3,16 @@ package ru.practicum.main_service.collaboration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.dto.HitDto;
+import ru.practicum.dto.ViewStatDto;
 import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.requests.repository.RequestsRepository;
 import ru.practicum.stats_client.StatisticsClient;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,11 +31,17 @@ public class StatsService {
         return confirmedRequestsByEvents;
     }
 
-    public Map<Long, Long> getViewsByEvents(List<Event> events) {
-        LocalDateTime start = events.stream().map(Event::getPublishedOn).filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo).orElse(null);
-        List<Long> eventIds = events.stream().map(Event::getId).collect(Collectors.toList());
-        return statisticsClient.getViews(eventIds, start);
+    public Map<String, Long> getViewsByEvents(List<Event> events) {
+        DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String start = LocalDateTime.now().minusYears(2).format(customFormatter);
+        String end = LocalDateTime.now().plusYears(2).format(customFormatter);
+        List<String> eventUris = events.stream().map(e -> String.format("/events/%s", e.getId())).collect(Collectors.toList());
+        List<ViewStatDto> viewStatDto = statisticsClient.getViews(start, end, eventUris);
+        Map<String, Long> result = new HashMap<>();
+        for (ViewStatDto viewStat : viewStatDto) {
+            result.put(viewStat.getUri(), viewStat.getHits());
+        }
+        return result;
     }
 
     public void createHit(HitDto hitDto) {

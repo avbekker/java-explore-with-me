@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.main_service.enums.Sorting;
 import ru.practicum.main_service.events.services.public_service.service.EventsPublicService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,9 @@ public class EventsPublicController {
                                          @RequestParam(required = false) LocalDateTime rangeStart,
                                          @RequestParam(required = false) LocalDateTime rangeEnd,
                                          @RequestParam(defaultValue = "false") Boolean available,
-                                         @RequestParam(required = false) String sort,
-                                         @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                         @RequestParam(defaultValue = "10") @Positive Integer size,
+                                         @RequestParam(required = false) Sorting sort,
+                                         @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
+                                         @RequestParam(defaultValue = "10", required = false) @Positive Integer size,
                                          HttpServletRequest request) {
         log.info("EventsPublicController: GET request received with searching text {} and sort by {}", text, sort);
         return new ResponseEntity<>(service.search(text, categories, paid, rangeStart, rangeEnd, available, sort,

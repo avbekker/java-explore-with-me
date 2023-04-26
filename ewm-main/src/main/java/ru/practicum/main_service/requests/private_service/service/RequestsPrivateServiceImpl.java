@@ -49,28 +49,24 @@ public class RequestsPrivateServiceImpl implements RequestsPrivateService {
         if (user.equals(event.getInitiator())) {
             throw new BadRequestException("Initiator cannot send request.");
         }
-        if (event.getState().equals(State.PUBLISHED)) {
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new BadRequestException("Event did not published yet.");
         }
-        List<Request> requests = requestsRepository.findByRequesterAndEvent(user, event);
-        if (requests.isEmpty()) {
-            Request result;
-            List<Request> requestsOfEvent = requestsRepository.findByEventAndStatusIn(event, List.of(Status.CONFIRMED));
-            if (event.getParticipantLimit() <= requestsOfEvent.size()) {
-                event.setNotAvailable(true);
-                throw new BadRequestException("Participation limit have been reached.");
-            }
-            if (event.isRequestModeration()) {
-                result = toRequest(user, event, Status.PENDING);
-            } else {
-                result = toRequest(user, event, Status.CONFIRMED);
-            }
-            log.info("RequestsPrivateServiceImpl: new participation request created from user id = {} to event id = {}.",
-                    userId, eventId);
-            return toParticipationRequestDto(requestsRepository.save(result));
-        } else {
-            throw new BadRequestException("Participation request already created.");
+        List<Request> requests = requestsRepository.findAllByEventId(eventId);
+        if (event.getParticipantLimit() <= requests.size()) {
+            event.setNotAvailable(true);
+            throw new BadRequestException("Participation limit have been reached.");
         }
+        Request result;
+        if (event.isRequestModeration()) {
+            result = toRequest(user, event, Status.PENDING);
+        } else {
+            result = toRequest(user, event, Status.CONFIRMED);
+        }
+        requestsRepository.save(result);
+        log.info("RequestsPrivateServiceImpl: new participation request created from user id = {} to event id = {}.",
+                userId, eventId);
+        return toParticipationRequestDto(result);
     }
 
     @Transactional
