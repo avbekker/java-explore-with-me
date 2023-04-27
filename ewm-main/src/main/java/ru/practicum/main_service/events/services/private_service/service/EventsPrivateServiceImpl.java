@@ -64,6 +64,9 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Category category = categoriesRepository.findById((long) newEventDto.getCategory())
                 .orElseThrow(() -> new NotFoundException("Category with id = " + newEventDto.getCategory() + " not found."));
+        if (newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new BadRequestException("Date of new event cannot be earlier than 2 hours before now.");
+        }
         Event event = toEvent(newEventDto, user, category);
         event = eventsRepository.save(event);
         log.info("EventsPrivateServiceImpl: Create new event.");
