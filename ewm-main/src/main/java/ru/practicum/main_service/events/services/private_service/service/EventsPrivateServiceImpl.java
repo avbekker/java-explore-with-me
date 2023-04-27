@@ -160,12 +160,16 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         List<Request> requests = requestsRepository.findAllByIdInAndEventId(newRequest.getRequestIds(), eventId);
         for (Request request : requests) {
             if ((event.getParticipantLimit() > 0) || event.isRequestModeration()) {
-                if (request.getStatus().equals(Status.CONFIRMED) && newRequest.getStatus().equals(Status.REJECTED)) {
-                    throw new BadRequestException("Updating status failed. old status = CONFIRMED, new status = REJECTED");
+                if (request.getStatus().equals(Status.CONFIRMED)) {
+                    throw new BadRequestException("Updating status failed. status = CONFIRMED");
                 }
-                request.setStatus(Status.REJECTED);
-                requestsRepository.save(request);
+                if (newRequest.getStatus().equals(Status.REJECTED)) {
+                    request.setStatus(Status.REJECTED);
+                } else if (newRequest.getStatus().equals(Status.CONFIRMED)) {
+                    request.setStatus(Status.CONFIRMED);
+                }
             }
+            requestsRepository.save(request);
         }
         List<Request> confirmedRequests = filterRequestsByStatus(requests, Status.CONFIRMED);
         List<Request> rejectedRequests = filterRequestsByStatus(requests, Status.REJECTED);
