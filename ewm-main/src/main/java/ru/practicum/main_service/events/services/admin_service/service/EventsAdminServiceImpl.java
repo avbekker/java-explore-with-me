@@ -86,8 +86,6 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         }
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        EventFullDto re = toEventFullDto(event, views, confirmedRequests);
-        Event ttt = eventsRepository.findById(eventId).orElseThrow();
-        return re;
+        return toEventFullDto(event, views, confirmedRequests);
     }
 }

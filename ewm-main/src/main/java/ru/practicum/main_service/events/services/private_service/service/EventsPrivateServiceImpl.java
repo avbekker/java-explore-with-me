@@ -9,6 +9,7 @@ import ru.practicum.main_service.categories.model.Category;
 import ru.practicum.main_service.categories.repository.CategoriesRepository;
 import ru.practicum.main_service.collaboration.StatsService;
 import ru.practicum.main_service.enums.State;
+import ru.practicum.main_service.enums.StateActionUser;
 import ru.practicum.main_service.enums.Status;
 import ru.practicum.main_service.events.dto.*;
 import ru.practicum.main_service.events.model.Event;
@@ -89,7 +90,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
-        if (!event.getState().equals(State.PENDING)) {
+        if (!event.getState().equals(State.CANCELED) || !event.isRequestModeration()) {
             throw new BadRequestException("Event id = " + eventId + " is not in pending status.");
         }
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
@@ -100,6 +101,12 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
             } else {
                 throw new BadRequestException("Event start date invalid.");
             }
+        }
+        if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
+            event.setState(State.PENDING);
+            event.setRequestModeration(true);
+        } else if (updateEvent.getStateAction().equals(StateActionUser.CANCEL_REVIEW)) {
+            event.setState(State.CANCELED);
         }
         event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
         event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
@@ -116,7 +123,6 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         if (updateEvent.getLocation() != null) {
             event.setLocation(toLocation(updateEvent.getLocation()));
         }
-
         log.info("EventsPrivateServiceImpl: Update event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
@@ -136,9 +142,6 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
     @Transactional
     @Override
     public EventRequestStatusUpdateResult updateRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest newRequest) {
-        if (newRequest == null) {
-            throw new BadRequestException("Bad request.");
-        }
         usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findById(eventId)
@@ -148,13 +151,8 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         List<Request> rejectedRequests = filterRequestsByStatus(requests, Status.REJECTED);
 
         if (event.getParticipantLimit() > 0 || event.isRequestModeration()) {
-            if (confirmedRequests.size() > event.getParticipantLimit()) {
+            if (confirmedRequests.size() >= event.getParticipantLimit()) {
                 throw new BadRequestException("Participation limit reached.");
-            }
-        } else if (event.getParticipantLimit() == confirmedRequests.size()) {
-            List<Request> requestsPending = filterRequestsByStatus(requests, Status.PENDING);
-            for (Request r : requestsPending) {
-                r.setStatus(Status.REJECTED);
             }
         }
         log.info("EventsPrivateServiceImpl: Update request of event id = {}", eventId);
