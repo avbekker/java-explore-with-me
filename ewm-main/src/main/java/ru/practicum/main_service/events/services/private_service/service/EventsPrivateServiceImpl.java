@@ -93,6 +93,9 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
+        if (event.getState().equals(State.PUBLISHED)) {
+            throw new BadRequestException("Event status is already published");
+        }
         if (event.getState().equals(State.CANCELED) || event.isRequestModeration()) {
             if (updateEvent.getEventDate() != null) {
                 if (LocalDateTime.now().isBefore(updateEvent.getEventDate().plusHours(2))) {
@@ -101,11 +104,14 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                     throw new BadRequestException("Event start date invalid.");
                 }
             }
-            if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
-                event.setState(State.PENDING);
-                event.setRequestModeration(true);
-            } else if (updateEvent.getStateAction().equals(StateActionUser.CANCEL_REVIEW)) {
-                event.setState(State.CANCELED);
+
+            if (updateEvent.getStateAction() != null) {
+                if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
+                    event.setState(State.PENDING);
+                    event.setRequestModeration(true);
+                } else if (updateEvent.getStateAction().equals(StateActionUser.CANCEL_REVIEW)) {
+                    event.setState(State.CANCELED);
+                }
             }
             event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
             event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
