@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.main_service.enums.StateActionAdmin;
-import ru.practicum.main_service.locations.dto.LocationDto;
+import ru.practicum.main_service.events.model.Location;
 
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
@@ -30,7 +30,7 @@ public class UpdateEventAdminRequest {
     private LocalDateTime eventDate;
 
     @Valid
-    private LocationDto location;
+    private Location location;
 
     private Boolean paid;
 

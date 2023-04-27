@@ -5,7 +5,6 @@ import lombok.*;
 import ru.practicum.main_service.categories.model.Category;
 import ru.practicum.main_service.compilations.model.Compilation;
 import ru.practicum.main_service.enums.State;
-import ru.practicum.main_service.locations.model.Location;
 import ru.practicum.main_service.users.model.User;
 
 import javax.persistence.*;

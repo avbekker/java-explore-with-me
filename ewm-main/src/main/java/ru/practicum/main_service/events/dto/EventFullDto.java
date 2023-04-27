@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.main_service.categories.dto.CategoryDto;
 import ru.practicum.main_service.enums.State;
-import ru.practicum.main_service.locations.dto.LocationDto;
+import ru.practicum.main_service.events.model.Location;
 import ru.practicum.main_service.users.dto.UserShortDto;
 
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class EventFullDto {
     private LocalDateTime eventDate;
     private Long id;
     private UserShortDto initiator;
-    private LocationDto location;
+    private Location location;
     private Boolean paid;
     private Integer participantLimit;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

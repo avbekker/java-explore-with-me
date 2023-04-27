@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCategoryDto;
-import static ru.practicum.main_service.locations.mapper.LocationMapper.toLocation;
-import static ru.practicum.main_service.locations.mapper.LocationMapper.toLocationDto;
 import static ru.practicum.main_service.users.mapper.UserMapper.toUserShortDto;
 
 public class EventMapper {
@@ -28,7 +26,7 @@ public class EventMapper {
                 .description(newEventDto.getDescription())
                 .eventDate(newEventDto.getEventDate())
                 .initiator(user)
-                .location(toLocation(newEventDto.getLocation()))
+                .location(newEventDto.getLocation())
                 .paid(newEventDto.isPaid())
                 .participantLimit(newEventDto.getParticipantLimit())
                 .publishedOn(null)
@@ -53,7 +51,7 @@ public class EventMapper {
                 .participantLimit(event.getParticipantLimit())
                 .state(event.getState())
                 .createdOn(event.getCreatedOn())
-                .location(toLocationDto(event.getLocation()))
+                .location(event.getLocation())
                 .requestModeration(event.isRequestModeration())
                 .build();
     }
@@ -68,7 +66,7 @@ public class EventMapper {
                 .eventDate(event.getEventDate())
                 .id(event.getId())
                 .initiator(toUserShortDto(event.getInitiator()))
-                .location(toLocationDto(event.getLocation()))
+                .location(event.getLocation())
                 .paid(event.getPaid())
                 .participantLimit(event.getParticipantLimit())
                 .publishedOn(event.getPublishedOn())

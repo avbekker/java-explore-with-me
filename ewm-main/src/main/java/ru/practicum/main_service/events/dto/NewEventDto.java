@@ -2,7 +2,7 @@ package ru.practicum.main_service.events.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.practicum.main_service.locations.dto.LocationDto;
+import ru.practicum.main_service.events.model.Location;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -33,7 +33,7 @@ public class NewEventDto {
 
     @Valid
     @NotNull
-    private LocationDto location;
+    private Location location;
 
     private boolean paid;
 

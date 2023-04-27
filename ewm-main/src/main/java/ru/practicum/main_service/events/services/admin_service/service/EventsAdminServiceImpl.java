@@ -25,7 +25,6 @@ import java.util.Objects;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventFullDto;
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventFullDtoList;
-import static ru.practicum.main_service.locations.mapper.LocationMapper.toLocation;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +75,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
         event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
         if (updateEvent.getLocation() != null) {
-            event.setLocation(toLocation(updateEvent.getLocation()));
+            event.setLocation(updateEvent.getLocation());
         }
         if (updateEvent.getCategory() != null) {
             Category category = categoriesRepository.findById(updateEvent.getCategory())

@@ -31,7 +31,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.*;
-import static ru.practicum.main_service.locations.mapper.LocationMapper.toLocation;
 import static ru.practicum.main_service.requests.mapper.RequestMapper.toEventRequestStatusUpdateResult;
 import static ru.practicum.main_service.requests.mapper.RequestMapper.toParticipationRequestDtoList;
 
@@ -128,7 +127,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
             event.setCategory(category);
         }
         if (updateEvent.getLocation() != null) {
-            event.setLocation(toLocation(updateEvent.getLocation()));
+            event.setLocation(updateEvent.getLocation());
         }
 
         event = eventsRepository.save(event);

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.main_service.enums.StateActionUser;
-import ru.practicum.main_service.locations.dto.LocationDto;
+import ru.practicum.main_service.events.model.Location;
 
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
@@ -26,7 +26,7 @@ public class UpdateEventUserRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
     @Valid
-    private LocationDto location;
+    private Location location;
     private Boolean paid;
     @PositiveOrZero
     private Integer participantLimit;

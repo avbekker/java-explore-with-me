@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS EVENTS
     DESCRIPTION        CHARACTER VARYING(7000),
     EVENT_DATE         TIMESTAMP WITHOUT TIME ZONE,
     INITIATOR_ID       BIGINT                                  NOT NULL,
-    LOT                FLOAT                                   NOT NULL,
+    LAT                FLOAT                                   NOT NULL,
     LON                FLOAT                                   NOT NULL,
     PAID               BOOLEAN,
     PARTICIPANT_LIMIT  INTEGER,
