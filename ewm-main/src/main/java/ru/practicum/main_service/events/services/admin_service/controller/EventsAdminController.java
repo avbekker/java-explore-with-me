@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.main_service.enums.State;
 import ru.practicum.main_service.events.dto.UpdateEventAdminRequest;
 import ru.practicum.main_service.events.services.admin_service.service.EventsAdminService;
 
@@ -24,7 +25,7 @@ public class EventsAdminController {
 
     @GetMapping
     public ResponseEntity<Object> getAll(@RequestParam(required = false) List<Long> users,
-                                         @RequestParam(required = false) List<String> states,
+                                         @RequestParam(required = false) List<State> states,
                                          @RequestParam(required = false) List<Long> categories,
                                          @RequestParam(required = false) LocalDateTime rangeStart,
                                          @RequestParam(required = false) LocalDateTime rangeEnd,

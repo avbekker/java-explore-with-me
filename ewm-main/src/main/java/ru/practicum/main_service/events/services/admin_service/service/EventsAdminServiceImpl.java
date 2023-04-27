@@ -38,7 +38,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<EventFullDto> getAll(List<Long> users, List<String> states, List<Long> categories,
+    public List<EventFullDto> getAll(List<Long> users, List<State> states, List<Long> categories,
                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
         List<Event> events = eventsRepository.getEventsByAdmin(users, states, categories,
                 rangeStart, rangeEnd, PageRequest.of(from / size, size)).getContent();
