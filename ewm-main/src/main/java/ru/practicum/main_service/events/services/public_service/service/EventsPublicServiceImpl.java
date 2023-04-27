@@ -40,12 +40,6 @@ public class EventsPublicServiceImpl implements EventsPublicService {
     public List<EventShortDto> search(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                       LocalDateTime rangeEnd, Boolean available, Sorting sort, Integer from, Integer size,
                                       HttpServletRequest request) {
-        statsService.createHit(HitDto.builder()
-                .app("main-container")
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .created(LocalDateTime.now())
-                .build());
         if (rangeStart != null && rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
                 throw new BadRequestException("Start cannot be after end.");
@@ -64,6 +58,12 @@ public class EventsPublicServiceImpl implements EventsPublicService {
                 result.sort(Comparator.comparing(EventShortDto::getViews));
             }
         }
+        statsService.createHit(HitDto.builder()
+                .app("main-container")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .created(LocalDateTime.now())
+                .build());
         log.info("EventsPublicServiceImpl: Get events by text {}", text);
         return result;
     }

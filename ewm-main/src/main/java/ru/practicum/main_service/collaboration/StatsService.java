@@ -5,11 +5,13 @@ import org.springframework.stereotype.Component;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.ViewStatDto;
 import ru.practicum.main_service.events.model.Event;
+import ru.practicum.main_service.requests.model.Request;
 import ru.practicum.main_service.requests.repository.RequestsRepository;
 import ru.practicum.stats_client.StatisticsClient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +25,15 @@ public class StatsService {
 
     public Map<Long, Long> getRequestsByEvents(List<Event> events) {
         Map<Long, Long> confirmedRequestsByEvents = new HashMap<>();
-        long confirmationRequests;
+        List<Request> requests = requestsRepository.findAllByEventIn(events);
         for (Event event : events) {
-            confirmationRequests = requestsRepository.findByEvent(event).size();
+            List<Long> requestsIds = new ArrayList<>();
+            for (Request request : requests) {
+                if (request.getEvent().getId().equals(event.getId())) {
+                    requestsIds.add(request.getId());
+                }
+            }
+            long confirmationRequests = requestsIds.size();
             confirmedRequestsByEvents.put(event.getId(), confirmationRequests);
         }
         return confirmedRequestsByEvents;

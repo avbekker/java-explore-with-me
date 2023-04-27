@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RequestsRepository extends JpaRepository<Request, Long> {
+    List<Request> findAllByEventIn(List<Event> events);
 
     List<Request> findByRequester(User requester);
 

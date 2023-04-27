@@ -59,6 +59,13 @@ public class EventsAdminServiceImpl implements EventsAdminService {
             throw new BadRequestException("Cannot update event. Creation date " + event.getCreatedOn() +
                     " should be earlier than event date " + updateEvent.getEventDate());
         }
+        event = updateEvent(event, updateEvent);
+        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
+        long confirmedRequests = requestsRepository.findByEvent(event).size();
+        return toEventFullDto(event, views, confirmedRequests);
+    }
+
+    private Event updateEvent(Event event, UpdateEventAdminRequest updateEvent) {
         if (updateEvent.getStateAction().equals(StateActionAdmin.PUBLISH_EVENT)) {
             event.setState(State.PUBLISHED);
             event.setPublishedOn(LocalDateTime.now());
@@ -83,8 +90,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
                             updateEvent.getCategory() + " not found."));
             event.setCategory(category);
         }
-        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
-        long confirmedRequests = requestsRepository.findByEvent(event).size();
-        return toEventFullDto(event, views, confirmedRequests);
+        event = eventsRepository.save(event);
+        return event;
     }
 }

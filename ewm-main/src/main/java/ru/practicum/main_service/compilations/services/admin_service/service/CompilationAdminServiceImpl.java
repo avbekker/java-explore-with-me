@@ -44,9 +44,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
         List<Event> events = eventsRepository.findByIdIn(newCompilationDto.getEvents());
         compilation = toCompilation(newCompilationDto, events);
         compilationRepository.save(compilation);
-        Map<String, Long> views = statsService.getViewsByEvents(events);
-        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
-        List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
+        List<EventShortDto> eventsShortDto = getEventShortDtoList(events);
         log.info("CompilationAdminServiceImpl: New compilation created.");
         return toCompilationDto(compilation, eventsShortDto);
     }
@@ -60,9 +58,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
         if (updateCompilationRequest.getEvents() != null) {
             events = eventsRepository.findByIdInAndState(updateCompilationRequest.getEvents(), State.PUBLISHED);
         }
-        Map<String, Long> views = statsService.getViewsByEvents(events);
-        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
-        List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
+        List<EventShortDto> eventsShortDto = getEventShortDtoList(events);
         compilation.setEvents(events);
         if (updateCompilationRequest.getPinned() != null) {
             compilation.setPinned(updateCompilationRequest.getPinned());
@@ -79,5 +75,11 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
     public void delete(Long compilationId) {
         compilationRepository.deleteById(compilationId);
         log.info("CompilationAdminServiceImpl: compilation id = {} deleted.", compilationId);
+    }
+
+    private List<EventShortDto> getEventShortDtoList(List<Event> events) {
+        Map<String, Long> views = statsService.getViewsByEvents(events);
+        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
+        return toEventShortDtoList(events, views, confirmationRequests);
     }
 }
