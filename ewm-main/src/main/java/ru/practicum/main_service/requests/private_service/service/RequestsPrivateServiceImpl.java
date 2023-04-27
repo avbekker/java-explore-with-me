@@ -52,6 +52,10 @@ public class RequestsPrivateServiceImpl implements RequestsPrivateService {
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new BadRequestException("Event did not published yet.");
         }
+        Request request = requestsRepository.findByRequesterIdAndEventId(userId, eventId);
+        if (request != null) {
+            throw new BadRequestException("Request is already created with id = " + request.getId());
+        }
         List<Request> requests = requestsRepository.findAllByEventId(eventId);
         if (event.getParticipantLimit() <= requests.size()) {
             event.setNotAvailable(true);
