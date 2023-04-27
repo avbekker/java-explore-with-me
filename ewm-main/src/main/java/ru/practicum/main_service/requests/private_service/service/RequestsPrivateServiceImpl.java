@@ -23,12 +23,12 @@ import static ru.practicum.main_service.requests.mapper.RequestMapper.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class RequestsPrivateServiceImpl implements RequestsPrivateService {
     private final RequestsRepository requestsRepository;
     private final UserRepository usersRepository;
     private final EventsRepository eventsRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public List<ParticipationRequestDto> getByUser(Long userId) {
         User user = usersRepository.findById(userId)

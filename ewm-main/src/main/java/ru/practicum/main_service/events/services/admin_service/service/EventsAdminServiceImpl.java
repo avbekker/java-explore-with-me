@@ -29,7 +29,6 @@ import static ru.practicum.main_service.locations.mapper.LocationMapper.toLocati
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class EventsAdminServiceImpl implements EventsAdminService {
     private final EventsRepository eventsRepository;
@@ -37,6 +36,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
     private final RequestsRepository requestsRepository;
     private final StatsService statsService;
 
+    @Transactional(readOnly = true)
     @Override
     public List<EventFullDto> getAll(List<Long> users, List<String> states, List<Long> categories,
                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
@@ -47,6 +47,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         return toEventFullDtoList(events, viewsByEvents, confirmedRequestsByEvents);
     }
 
+    @Transactional
     @Override
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEvent) {
         Event event = eventsRepository.findById(eventId)
@@ -85,6 +86,8 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         }
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        return toEventFullDto(event, views, confirmedRequests);
+        EventFullDto re = toEventFullDto(event, views, confirmedRequests);
+        Event ttt = eventsRepository.findById(eventId).orElseThrow();
+        return re;
     }
 }

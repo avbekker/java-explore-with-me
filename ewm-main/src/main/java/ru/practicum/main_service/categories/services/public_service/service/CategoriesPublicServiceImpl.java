@@ -17,11 +17,11 @@ import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCateg
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class CategoriesPublicServiceImpl implements CategoriesPublicService {
     private final CategoriesRepository repository;
 
+    @Transactional(readOnly = true)
     @Override
     public List<CategoryDto> getAll(int from, int size) {
         List<Category> categories = repository.findAll(PageRequest.of(from / size, size)).getContent();
@@ -29,6 +29,7 @@ public class CategoriesPublicServiceImpl implements CategoriesPublicService {
         return toCategoryDtoList(categories);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CategoryDto getById(Long categoryId) {
         Category category = repository.findById(categoryId)

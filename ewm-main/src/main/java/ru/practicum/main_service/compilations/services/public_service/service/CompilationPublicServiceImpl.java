@@ -23,13 +23,13 @@ import static ru.practicum.main_service.compilations.mapper.CompilationMapper.to
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDtoList;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class CompilationPublicServiceImpl implements CompilationPublicService {
     private final CompilationRepository compilationRepository;
     private final StatsService statsService;
 
+    @Transactional(readOnly = true)
     @Override
     public List<CompilationDto> getAll(Boolean pinned, Integer from, Integer size) {
         List<Compilation> compilations = compilationRepository.findByPinned(pinned, PageRequest.of(from / size, size)).getContent();
@@ -37,6 +37,7 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
         return toCompilationDtoList(compilations, allEvents);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CompilationDto getById(Long id) {
         Compilation compilation = compilationRepository.findById(id)
@@ -48,7 +49,6 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
         log.info("CompilationPublicServiceImpl: Get compilation by id = {}", id);
         return toCompilationDto(compilation, eventsShortDto);
     }
-
 
     private Map<Long, List<EventShortDto>> getEventsShortDtoMap(List<Compilation> compilations) {
         List<Event> events = new ArrayList<>();

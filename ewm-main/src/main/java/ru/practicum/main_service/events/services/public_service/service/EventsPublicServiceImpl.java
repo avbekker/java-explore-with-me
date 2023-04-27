@@ -29,13 +29,13 @@ import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDt
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class EventsPublicServiceImpl implements EventsPublicService {
     private final EventsRepository eventsRepository;
     private final RequestsRepository requestsRepository;
     private final StatsService statsService;
 
+    @Transactional(readOnly = true)
     @Override
     public List<EventShortDto> search(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                       LocalDateTime rangeEnd, Boolean available, Sorting sort, Integer from, Integer size,
@@ -68,6 +68,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public EventFullDto getById(Long id, HttpServletRequest request) {
         Event event = eventsRepository.findById(id)

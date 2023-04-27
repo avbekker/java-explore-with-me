@@ -37,7 +37,6 @@ import static ru.practicum.main_service.requests.mapper.RequestMapper.toParticip
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class EventsPrivateServiceImpl implements EventsPrivateService {
     private final EventsRepository eventsRepository;
     private final UserRepository usersRepository;
@@ -45,6 +44,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
     private final RequestsRepository requestsRepository;
     private final StatsService statsService;
 
+    @Transactional(readOnly = true)
     @Override
     public List<EventShortDto> getByUser(Long userId, Integer from, Integer size) {
         User user = usersRepository.findById(userId)
@@ -69,6 +69,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         return toEventDto(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public EventFullDto getById(Long userId, Long eventId) {
         User user = usersRepository.findById(userId)
@@ -120,6 +121,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         return toEventFullDto(event, views, confirmedRequests);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ParticipationRequestDto> getRequests(Long userId, Long eventId) {
         User user = usersRepository.findById(userId)
@@ -131,6 +133,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         return toParticipationRequestDtoList(requests);
     }
 
+    @Transactional
     @Override
     public EventRequestStatusUpdateResult updateRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest newRequest) {
         if (newRequest == null) {

@@ -25,7 +25,6 @@ import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDt
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class CompilationAdminServiceImpl implements CompilationAdminService {
     private final CompilationRepository compilationRepository;

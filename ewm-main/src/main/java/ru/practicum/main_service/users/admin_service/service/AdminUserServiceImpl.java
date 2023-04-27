@@ -17,7 +17,6 @@ import static ru.practicum.main_service.users.mapper.UserMapper.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class AdminUserServiceImpl implements AdminUserService {
 
     private final UserRepository repository;
@@ -32,6 +31,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         return userDto;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAll(List<Long> ids, int page, int size) {
         List<User> users;
