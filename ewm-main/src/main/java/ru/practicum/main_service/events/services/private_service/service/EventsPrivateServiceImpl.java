@@ -90,39 +90,38 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
-        if (!event.getState().equals(State.CANCELED) || !event.isRequestModeration()) {
-            throw new BadRequestException("Event id = " + eventId + " is not in pending status.");
+        if (event.getState().equals(State.CANCELED) || event.isRequestModeration()) {
+            if (updateEvent.getEventDate() != null) {
+                if (LocalDateTime.now().isBefore(updateEvent.getEventDate().plusHours(2))) {
+                    event.setEventDate(updateEvent.getEventDate());
+                } else {
+                    throw new BadRequestException("Event start date invalid.");
+                }
+            }
+            if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
+                event.setState(State.PENDING);
+                event.setRequestModeration(true);
+            } else if (updateEvent.getStateAction().equals(StateActionUser.CANCEL_REVIEW)) {
+                event.setState(State.CANCELED);
+            }
+            event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
+            event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
+            event.setPaid(Objects.requireNonNullElse(updateEvent.getPaid(), event.getPaid()));
+            event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
+            event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
+            event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
+            if (updateEvent.getCategory() != null) {
+                Category category = categoriesRepository.findById(updateEvent.getCategory())
+                        .orElseThrow(() -> new NotFoundException("Category with id = " +
+                                updateEvent.getCategory() + " not found."));
+                event.setCategory(category);
+            }
+            if (updateEvent.getLocation() != null) {
+                event.setLocation(toLocation(updateEvent.getLocation()));
+            }
         }
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        if (updateEvent.getEventDate() != null) {
-            if (LocalDateTime.now().isBefore(updateEvent.getEventDate().plusHours(2))) {
-                event.setEventDate(updateEvent.getEventDate());
-            } else {
-                throw new BadRequestException("Event start date invalid.");
-            }
-        }
-        if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
-            event.setState(State.PENDING);
-            event.setRequestModeration(true);
-        } else if (updateEvent.getStateAction().equals(StateActionUser.CANCEL_REVIEW)) {
-            event.setState(State.CANCELED);
-        }
-        event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
-        event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
-        event.setPaid(Objects.requireNonNullElse(updateEvent.getPaid(), event.getPaid()));
-        event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
-        event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
-        event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
-        if (updateEvent.getCategory() != null) {
-            Category category = categoriesRepository.findById(updateEvent.getCategory())
-                    .orElseThrow(() -> new NotFoundException("Category with id = " +
-                            updateEvent.getCategory() + " not found."));
-            event.setCategory(category);
-        }
-        if (updateEvent.getLocation() != null) {
-            event.setLocation(toLocation(updateEvent.getLocation()));
-        }
         log.info("EventsPrivateServiceImpl: Update event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
