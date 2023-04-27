@@ -57,7 +57,7 @@ public class EventsPrivateController {
 
     @PatchMapping("/{eventId}/requests")
     public ResponseEntity<Object> updateRequest(@PathVariable Long userId, @PathVariable Long eventId,
-                                                @RequestBody EventRequestStatusUpdateRequest request) {
+                                                @RequestBody(required = false) EventRequestStatusUpdateRequest request) {
         log.info("EventsPrivateController: PATCH request for participation received user with id = {} for event id = {}", userId, eventId);
         return new ResponseEntity<>(service.updateRequestStatus(userId, eventId, request), HttpStatus.OK);
     }

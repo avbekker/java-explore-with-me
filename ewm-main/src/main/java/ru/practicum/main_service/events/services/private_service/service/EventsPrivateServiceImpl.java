@@ -150,6 +150,9 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
     @Transactional
     @Override
     public EventRequestStatusUpdateResult updateRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest newRequest) {
+        if (newRequest == null) {
+            throw new BadRequestException("Fail");
+        }
         usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findById(eventId)
