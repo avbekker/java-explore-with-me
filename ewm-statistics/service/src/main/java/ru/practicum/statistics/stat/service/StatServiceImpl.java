@@ -25,10 +25,10 @@ class StatServiceImpl implements StatService {
 
     @Transactional
     @Override
-    public void create(HitDto hitDto) {
+    public Stat create(HitDto hitDto) {
         Stat stat = toStat(hitDto);
         stat.setCreated(LocalDateTime.now());
-        repository.save(stat);
+        return repository.save(stat);
     }
 
     @Override
