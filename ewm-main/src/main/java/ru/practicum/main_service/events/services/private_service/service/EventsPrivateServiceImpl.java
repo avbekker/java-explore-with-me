@@ -141,20 +141,23 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
 
     @Transactional
     @Override
-    public EventRequestStatusUpdateResult updateRequest(Long userId, Long eventId, EventRequestStatusUpdateRequest newRequest) {
+    public EventRequestStatusUpdateResult updateRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest newRequest) {
         usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
         List<Request> requests = requestsRepository.findAllByIdInAndEventId(newRequest.getRequestIds(), eventId);
-        List<Request> confirmedRequests = filterRequestsByStatus(requests, Status.CONFIRMED);
-        List<Request> rejectedRequests = filterRequestsByStatus(requests, Status.REJECTED);
-
-        if (event.getParticipantLimit() > 0 || event.isRequestModeration()) {
-            if (confirmedRequests.size() >= event.getParticipantLimit()) {
-                throw new BadRequestException("Participation limit reached.");
+        for (Request request : requests) {
+            if ((event.getParticipantLimit() > 0) || event.isRequestModeration()) {
+                if (request.getStatus().equals(Status.CONFIRMED) && newRequest.getStatus().equals(Status.REJECTED)) {
+                    throw new BadRequestException("Updating status failed. old status = CONFIRMED, new status = REJECTED");
+                }
+                request.setStatus(Status.REJECTED);
+                requestsRepository.save(request);
             }
         }
+        List<Request> confirmedRequests = filterRequestsByStatus(requests, Status.CONFIRMED);
+        List<Request> rejectedRequests = filterRequestsByStatus(requests, Status.REJECTED);
         log.info("EventsPrivateServiceImpl: Update request of event id = {}", eventId);
         return toEventRequestStatusUpdateResult(toParticipationRequestDtoList(confirmedRequests),
                 toParticipationRequestDtoList(rejectedRequests));
