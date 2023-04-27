@@ -96,17 +96,19 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         if (event.getState().equals(State.PUBLISHED)) {
             throw new BadRequestException("Event status is already published");
         }
-        if (event.getState().equals(State.CANCELED) || event.isRequestModeration()) {
-            if (updateEvent.getEventDate() != null) {
-                if (LocalDateTime.now().isBefore(updateEvent.getEventDate().plusHours(2))) {
-                    event.setEventDate(updateEvent.getEventDate());
-                } else {
-                    throw new BadRequestException("Event start date invalid.");
-                }
+        if (!event.getState().equals(State.CANCELED) && !event.getState().equals(State.PENDING)) {
+            throw new BadRequestException("Only pending or canceled events can be changed");
+        }
+        if (updateEvent.getEventDate() != null) {
+            if (LocalDateTime.now().isBefore(updateEvent.getEventDate().plusHours(2))) {
+                event.setEventDate(updateEvent.getEventDate());
+            } else {
+                throw new BadRequestException("Event start date invalid.");
             }
+        }
 
-            if (updateEvent.getStateAction() != null) {
-                if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
+        if (updateEvent.getStateAction() != null) {
+            if (updateEvent.getStateAction().equals(StateActionUser.SEND_TO_REVIEW)) {
                     event.setState(State.PENDING);
                     event.setRequestModeration(true);
                 } else if (updateEvent.getStateAction().equals(StateActionUser.CANCEL_REVIEW)) {
@@ -118,17 +120,18 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
             event.setPaid(Objects.requireNonNullElse(updateEvent.getPaid(), event.getPaid()));
             event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
             event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
-            event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
-            if (updateEvent.getCategory() != null) {
-                Category category = categoriesRepository.findById(updateEvent.getCategory())
-                        .orElseThrow(() -> new NotFoundException("Category with id = " +
-                                updateEvent.getCategory() + " not found."));
-                event.setCategory(category);
-            }
-            if (updateEvent.getLocation() != null) {
-                event.setLocation(toLocation(updateEvent.getLocation()));
-            }
+        event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
+        if (updateEvent.getCategory() != null) {
+            Category category = categoriesRepository.findById(updateEvent.getCategory())
+                    .orElseThrow(() -> new NotFoundException("Category with id = " +
+                            updateEvent.getCategory() + " not found."));
+            event.setCategory(category);
         }
+        if (updateEvent.getLocation() != null) {
+            event.setLocation(toLocation(updateEvent.getLocation()));
+        }
+
+        event = eventsRepository.save(event);
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
         log.info("EventsPrivateServiceImpl: Update event id = {} user id = {}", eventId, userId);
