@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CategoryMapper {
+    private CategoryMapper() {
+    }
+
     public static CategoryDto toCategoryDto(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())
@@ -23,8 +26,5 @@ public class CategoryMapper {
 
     public static List<CategoryDto> toCategoryDtoList(List<Category> categories) {
         return categories.stream().map(CategoryMapper::toCategoryDto).collect(Collectors.toList());
-    }
-
-    private CategoryMapper() {
     }
 }

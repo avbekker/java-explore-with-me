@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
+    private CompilationMapper() {
+    }
+
     public static Compilation toCompilation(NewCompilationDto newCompilationDto, List<Event> events) {
         return Compilation.builder()
                 .id(null)
@@ -33,8 +36,5 @@ public class CompilationMapper {
         return compilations.stream()
                 .map(compilation -> toCompilationDto(compilation, allEvents.get(compilation.getId())))
                 .collect(Collectors.toList());
-    }
-
-    private CompilationMapper() {
     }
 }

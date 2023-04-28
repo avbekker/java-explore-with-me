@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RequestMapper {
+    private RequestMapper() {
+    }
+
     public static Request toRequest(User user, Event event, Status status) {
         return Request.builder()
                 .id(null)
@@ -42,8 +45,5 @@ public class RequestMapper {
 
     public static List<ParticipationRequestDto> toParticipationRequestDtoList(List<Request> requests) {
         return requests.stream().map(RequestMapper::toParticipationRequestDto).collect(Collectors.toList());
-    }
-
-    private RequestMapper() {
     }
 }

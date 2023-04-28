@@ -18,6 +18,9 @@ import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCateg
 import static ru.practicum.main_service.users.mapper.UserMapper.toUserShortDto;
 
 public class EventMapper {
+    private EventMapper() {
+    }
+
     public static Event toEvent(NewEventDto newEventDto, User user, Category category) {
         return Event.builder()
                 .annotation(newEventDto.getAnnotation())
@@ -103,8 +106,5 @@ public class EventMapper {
         return events.stream()
                 .map(event -> toEventShortDto(event, confirmedRequestsByEvents.get(event.getId()),
                         viewsByEvents.get(String.format("/events/%s", event.getId())))).collect(Collectors.toList());
-    }
-
-    private EventMapper() {
     }
 }
