@@ -12,8 +12,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class NewUserRequest {
     @NotBlank
-    String name;
+    private String name;
     @Email
     @NotBlank
-    String email;
+    private String email;
 }

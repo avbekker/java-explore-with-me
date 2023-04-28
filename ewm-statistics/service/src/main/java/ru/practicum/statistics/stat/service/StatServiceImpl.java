@@ -13,6 +13,7 @@ import ru.practicum.statistics.stat.repository.StatRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.statistics.stat.mapper.StatMapper.toHitDto;
 import static ru.practicum.statistics.stat.mapper.StatMapper.toStat;
 
 @Transactional(readOnly = true)
@@ -25,10 +26,10 @@ class StatServiceImpl implements StatService {
 
     @Transactional
     @Override
-    public Stat create(HitDto hitDto) {
+    public HitDto create(HitDto hitDto) {
         Stat stat = toStat(hitDto);
         stat.setCreated(LocalDateTime.now());
-        return repository.save(stat);
+        return toHitDto(repository.save(stat));
     }
 
     @Override

@@ -6,13 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.main_service.events.dto.NewEventDto;
-import ru.practicum.main_service.events.dto.UpdateEventUserRequest;
+import ru.practicum.main_service.events.dto.*;
 import ru.practicum.main_service.events.services.private_service.service.EventsPrivateService;
 import ru.practicum.main_service.requests.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.main_service.requests.dto.EventRequestStatusUpdateResult;
+import ru.practicum.main_service.requests.dto.ParticipationRequestDto;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/{userId}/events")
@@ -23,42 +25,42 @@ public class EventsPrivateController {
     private final EventsPrivateService service;
 
     @GetMapping
-    public ResponseEntity<Object> getByUser(@PathVariable Long userId,
-                                            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                            @RequestParam(defaultValue = "10") @Positive Integer size) {
+    public ResponseEntity<List<EventShortDto>> getByUser(@PathVariable Long userId,
+                                                         @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                                         @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("EventsPrivateController: GET request received user with id = {} from {} size {}", userId, from, size);
-        return new ResponseEntity<>(service.getByUser(userId, from, size), HttpStatus.OK);
+        return ResponseEntity.ok(service.getByUser(userId, from, size));
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@PathVariable Long userId, @Validated @RequestBody NewEventDto event) {
+    public ResponseEntity<EventDto> create(@PathVariable Long userId, @Validated @RequestBody NewEventDto event) {
         log.info("EventsPrivateController: POST request for new event received user with id = {}", userId);
         return new ResponseEntity<>(service.create(userId, event), HttpStatus.CREATED);
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<Object> getById(@PathVariable Long userId, @PathVariable Long eventId) {
+    public ResponseEntity<EventFullDto> getById(@PathVariable Long userId, @PathVariable Long eventId) {
         log.info("EventsPrivateController: GET request received user with id = {} for event id = {}", userId, eventId);
-        return new ResponseEntity<>(service.getById(userId, eventId), HttpStatus.OK);
+        return ResponseEntity.ok(service.getById(userId, eventId));
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<Object> update(@PathVariable Long userId, @PathVariable Long eventId,
-                                         @Validated @RequestBody UpdateEventUserRequest updateEvent) {
+    public ResponseEntity<EventFullDto> update(@PathVariable Long userId, @PathVariable Long eventId,
+                                               @Validated @RequestBody UpdateEventUserRequest updateEvent) {
         log.info("EventsPrivateController: PATCH request received user with id = {} for event id = {}", userId, eventId);
-        return new ResponseEntity<>(service.update(userId, eventId, updateEvent), HttpStatus.OK);
+        return ResponseEntity.ok(service.update(userId, eventId, updateEvent));
     }
 
     @GetMapping("/{eventId}/requests")
-    public ResponseEntity<Object> getRequests(@PathVariable Long userId, @PathVariable Long eventId) {
+    public ResponseEntity<List<ParticipationRequestDto>> getRequests(@PathVariable Long userId, @PathVariable Long eventId) {
         log.info("EventsPrivateController: GET request for participation received user with id = {} for event id = {}", userId, eventId);
-        return new ResponseEntity<>(service.getRequests(userId, eventId), HttpStatus.OK);
+        return ResponseEntity.ok(service.getRequests(userId, eventId));
     }
 
     @PatchMapping("/{eventId}/requests")
-    public ResponseEntity<Object> updateRequest(@PathVariable Long userId, @PathVariable Long eventId,
-                                                @RequestBody(required = false) EventRequestStatusUpdateRequest request) {
+    public ResponseEntity<EventRequestStatusUpdateResult> updateRequest(@PathVariable Long userId, @PathVariable Long eventId,
+                                                                        @RequestBody(required = false) EventRequestStatusUpdateRequest request) {
         log.info("EventsPrivateController: PATCH request for participation received user with id = {} for event id = {}", userId, eventId);
-        return new ResponseEntity<>(service.updateRequestStatus(userId, eventId, request), HttpStatus.OK);
+        return ResponseEntity.ok(service.updateRequestStatus(userId, eventId, request));
     }
 }

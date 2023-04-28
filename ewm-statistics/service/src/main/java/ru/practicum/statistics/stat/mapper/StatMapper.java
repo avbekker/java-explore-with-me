@@ -15,6 +15,15 @@ public class StatMapper {
                 .build();
     }
 
+    public static HitDto toHitDto(Stat stat) {
+        return HitDto.builder()
+                .app(stat.getApp())
+                .uri(stat.getUri())
+                .ip(stat.getIp())
+                .created(stat.getCreated())
+                .build();
+    }
+
     private StatMapper() {
     }
 }

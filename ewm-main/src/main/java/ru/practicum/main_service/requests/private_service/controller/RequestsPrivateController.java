@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.main_service.requests.dto.ParticipationRequestDto;
 import ru.practicum.main_service.requests.private_service.service.RequestsPrivateService;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/{userId}/requests")
@@ -17,20 +18,20 @@ public class RequestsPrivateController {
     private final RequestsPrivateService service;
 
     @GetMapping
-    public ResponseEntity<Object> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<ParticipationRequestDto>> getByUser(@PathVariable Long userId) {
         log.info("RequestsPrivateController: GET request received for user with id = {}", userId);
-        return ResponseEntity.of(Optional.of(service.getByUser(userId)));
+        return ResponseEntity.ok(service.getByUser(userId));
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@PathVariable Long userId, @RequestParam Long eventId) {
+    public ResponseEntity<ParticipationRequestDto> create(@PathVariable Long userId, @RequestParam Long eventId) {
         log.info("RequestsPrivateController: POST request received for new request for event {} from user {}", eventId, userId);
         return new ResponseEntity<>(service.create(userId, eventId), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{requestId}/cancel")
-    public ResponseEntity<Object> cancel(@PathVariable Long userId, @PathVariable Long requestId) {
+    public ResponseEntity<ParticipationRequestDto> cancel(@PathVariable Long userId, @PathVariable Long requestId) {
         log.info("RequestsPrivateController: PATCH request received for request with id ={} from user {}", requestId, userId);
-        return new ResponseEntity<>(service.cancel(userId, requestId), HttpStatus.OK);
+        return ResponseEntity.ok(service.cancel(userId, requestId));
     }
 }
