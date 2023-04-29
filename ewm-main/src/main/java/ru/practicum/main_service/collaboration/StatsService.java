@@ -39,7 +39,11 @@ public class StatsService {
     }
 
     public Map<String, Long> getViewsByEvents(List<Event> events) {
+
+
         String start = LocalDateTime.now().minusYears(2).format(FORMATTER);
+
+
         String end = LocalDateTime.now().format(FORMATTER);
         List<String> eventUris = events.stream().map(e -> String.format("/events/%s", e.getId())).collect(Collectors.toList());
         List<ViewStatDto> viewStatDto = statisticsClient.getViews(start, end, eventUris);

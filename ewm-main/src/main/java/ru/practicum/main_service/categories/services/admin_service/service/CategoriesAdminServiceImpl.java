@@ -13,7 +13,7 @@ import ru.practicum.main_service.events.repository.EventsRepository;
 import ru.practicum.main_service.excemptions.BadRequestException;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
-import java.util.Optional;
+import java.util.List;
 
 import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCategory;
 import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCategoryDto;
@@ -48,12 +48,12 @@ public class CategoriesAdminServiceImpl implements CategoryAdminService {
     @Transactional
     @Override
     public void delete(Long categoryId) {
-        Optional<Event> event = eventsRepository.findByCategoryId(categoryId);
+        List<Event> event = eventsRepository.findAllByCategoryId(categoryId);
         if (event.isEmpty()) {
             categoriesRepository.deleteById(categoryId);
             log.info("CategoriesAdminService: category with id = {} deleted.", categoryId);
         } else {
-            throw new BadRequestException("Event with id = " + event.get().getId() + " use this category.");
+            throw new BadRequestException("Some events use this category.");
         }
     }
 }
