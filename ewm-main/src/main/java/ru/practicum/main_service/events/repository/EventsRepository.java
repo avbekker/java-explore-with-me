@@ -33,16 +33,12 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
             "and (:paid IS NULL OR e.paid = :paid) " +
             "and e.eventDate between :rangeStart and :rangeEnd " +
             "and e.state = :state " +
-            "and (:categories IS NULL OR e.category.id IN :categories) " +
-            "and (:onlyAvailable IS NULL OR (:onlyAvailable = true " +
-            "and (SELECT COUNT(*) FROM Request r WHERE r.event = e AND r.status = 'CONFIRMED') < e.participantLimit) " +
-            "or :onlyAvailable = false)")
+            "and (:categories IS NULL OR e.category.id IN :categories) ")
     Page<Event> getEventPublicSearch(@Param("text") String text,
                                      @Param("categories") Collection<Long> categories,
                                      @Param("paid") Boolean paid,
                                      @Param("rangeStart") LocalDateTime rangeStart,
                                      @Param("rangeEnd") LocalDateTime rangeEnd,
-                                     @Param("onlyAvailable") Boolean onlyAvailable,
                                      @Param("state") State state,
                                      Pageable pageable);
 

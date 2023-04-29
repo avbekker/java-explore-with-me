@@ -10,6 +10,7 @@ import ru.practicum.dto.HitDto;
 import ru.practicum.main_service.collaboration.StatsService;
 import ru.practicum.main_service.enums.Sorting;
 import ru.practicum.main_service.enums.State;
+import ru.practicum.main_service.enums.Status;
 import ru.practicum.main_service.events.dto.EventFullDto;
 import ru.practicum.main_service.events.dto.EventShortDto;
 import ru.practicum.main_service.events.model.Event;
@@ -21,6 +22,7 @@ import ru.practicum.main_service.requests.repository.RequestsRepository;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventFullDto;
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDtoList;
@@ -38,7 +40,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
     @Transactional(readOnly = true)
     @Override
     public List<EventShortDto> search(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
-                                      LocalDateTime rangeEnd, Boolean available, Sorting sort, Integer from, Integer size,
+                                      LocalDateTime rangeEnd, Boolean onlyAvailable, Sorting sort, Integer from, Integer size,
                                       HttpServletRequest request) {
         if (rangeStart != null && rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
@@ -46,8 +48,20 @@ public class EventsPublicServiceImpl implements EventsPublicService {
             }
         }
         Pageable pageable = PageRequest.of(from / size, size);
-        Set<Event> events = new HashSet<>(eventsRepository.getEventPublicSearch(text, categories, paid, rangeStart, rangeEnd,
-                available, State.PUBLISHED, pageable).getContent());
+        List<Event> eventList = eventsRepository.getEventPublicSearch(text, categories, paid, rangeStart, rangeEnd,
+                State.PUBLISHED, pageable).getContent();
+        Set<Event> events = new HashSet<>();
+        if (onlyAvailable) {
+            List<Long> eventsIds = eventList.stream().map(Event::getId).collect(Collectors.toList());
+            Map<Long, Integer> requests = requestsRepository.findRequestsByEvent(eventsIds, Status.CONFIRMED);
+            for (Event event : eventList) {
+                if (event.getParticipantLimit() != 0 && event.getParticipantLimit() > requests.get(event.getId())) {
+                    events.add(event);
+                }
+            }
+        } else {
+            events.addAll(eventList);
+        }
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Integer> confirmedRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> result = toEventShortDtoList(events, views, confirmedRequests);

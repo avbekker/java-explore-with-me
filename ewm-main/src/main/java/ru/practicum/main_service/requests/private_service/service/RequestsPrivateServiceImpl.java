@@ -58,7 +58,6 @@ public class RequestsPrivateServiceImpl implements RequestsPrivateService {
         }
         List<Request> requests = requestsRepository.findAllByEventId(eventId);
         if (event.getParticipantLimit() == 0 || event.getParticipantLimit() <= requests.size()) {
-            event.setNotAvailable(true);
             throw new BadRequestException("Participation limit have been reached.");
         }
         Request result;

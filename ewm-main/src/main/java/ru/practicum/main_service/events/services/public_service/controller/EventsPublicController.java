@@ -34,13 +34,13 @@ public class EventsPublicController {
                                                       @RequestParam(required = false) Boolean paid,
                                                       @RequestParam(required = false) LocalDateTime rangeStart,
                                                       @RequestParam(required = false) LocalDateTime rangeEnd,
-                                                      @RequestParam(defaultValue = "false") Boolean available,
+                                                      @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                                       @RequestParam(required = false) Sorting sort,
                                                       @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
                                                       @RequestParam(defaultValue = "10", required = false) @Positive Integer size,
                                                       HttpServletRequest request) {
         log.info("EventsPublicController: GET request received with searching text {} and sort by {}", text, sort);
-        return ResponseEntity.ok(service.search(text, categories, paid, rangeStart, rangeEnd, available, sort,
+        return ResponseEntity.ok(service.search(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, request));
     }
 

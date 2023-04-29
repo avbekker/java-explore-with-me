@@ -38,7 +38,6 @@ public class EventMapper {
                 .state(State.PENDING)
                 .title(newEventDto.getTitle())
                 .compilations(null)
-                .isNotAvailable(false)
                 .build();
     }
 

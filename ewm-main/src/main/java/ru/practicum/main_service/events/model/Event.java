@@ -63,7 +63,4 @@ public class Event {
     @ManyToMany
     @ToString.Exclude
     private List<Compilation> compilations;
-
-    @Column(name = "NOT_AVAILABLE")
-    private boolean isNotAvailable;
 }
