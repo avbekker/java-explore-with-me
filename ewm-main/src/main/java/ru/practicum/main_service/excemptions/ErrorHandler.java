@@ -74,16 +74,4 @@ public class ErrorHandler {
                 .message(e.getMessage())
                 .build();
     }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleThrowable(final Throwable e) {
-        log.error(e.getMessage());
-        return ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                .reason(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .message(e.getMessage())
-                .build();
-    }
 }
