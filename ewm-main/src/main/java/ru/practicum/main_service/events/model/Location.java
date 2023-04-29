@@ -3,6 +3,7 @@ package ru.practicum.main_service.events.model;
 import lombok.*;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -11,6 +12,8 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @Embeddable
 public class Location {
-    private float lat;
-    private float lon;
+    @NotNull
+    private Float lat;
+    @NotNull
+    private Float lon;
 }
