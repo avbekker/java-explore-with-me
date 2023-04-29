@@ -71,12 +71,18 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         } else if (updateEvent.getStateAction().equals(StateActionAdmin.REJECT_EVENT)) {
             event.setState(State.CANCELED);
         }
-        event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
-        event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
+        if (updateEvent.getAnnotation() != null && !updateEvent.getAnnotation().isBlank()) {
+            event.setAnnotation(updateEvent.getAnnotation());
+        }
+        if (updateEvent.getDescription() != null && !updateEvent.getDescription().isBlank()) {
+            event.setDescription(updateEvent.getDescription());
+        }
         event.setEventDate(Objects.requireNonNullElse(updateEvent.getEventDate(), event.getEventDate()));
         event.setPaid(Objects.requireNonNullElse(updateEvent.getPaid(), event.getPaid()));
         event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
-        event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
+        if (updateEvent.getTitle() != null && !updateEvent.getTitle().isBlank()) {
+            event.setTitle(updateEvent.getTitle());
+        }
         event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
         event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
         if (updateEvent.getLocation() != null) {
