@@ -7,6 +7,7 @@ import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.users.model.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -34,5 +35,6 @@ public class Request {
     private User requester;
 
     @Enumerated(EnumType.STRING)
+    @Size(max = 50)
     private Status status;
 }

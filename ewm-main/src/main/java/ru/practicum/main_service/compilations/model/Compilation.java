@@ -4,6 +4,7 @@ import lombok.*;
 import ru.practicum.main_service.events.model.Event;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -20,7 +21,7 @@ public class Compilation {
     private Long id;
 
     private Boolean pinned;
-
+    @Size(max = 400)
     private String title;
 
     @ManyToMany

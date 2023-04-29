@@ -3,6 +3,7 @@ package ru.practicum.main_service.users.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -16,6 +17,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Long id;
+    @Size(max = 50)
     private String name;
+    @Size(max = 50)
     private String email;
 }
