@@ -29,7 +29,12 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
     @Transactional(readOnly = true)
     @Override
     public List<CompilationDto> getAll(Boolean pinned, Integer from, Integer size) {
-        List<Compilation> compilations = compilationRepository.findByPinned(pinned, PageRequest.of(from / size, size)).getContent();
+        List<Compilation> compilations;
+        if (pinned == null) {
+            compilations = compilationRepository.findAll(PageRequest.of(from / size, size)).getContent();
+        } else {
+            compilations = compilationRepository.findByPinned(pinned, PageRequest.of(from / size, size)).getContent();
+        }
         Map<Long, List<EventShortDto>> allEvents = getEventsShortDtoMap(compilations);
         return toCompilationDtoList(compilations, allEvents);
     }

@@ -25,7 +25,7 @@ public class CompilationsPublicController {
     private final CompilationPublicService service;
 
     @GetMapping
-    public ResponseEntity<List<CompilationDto>> getAll(@RequestParam(value = "pinned", defaultValue = "false") Boolean pinned,
+    public ResponseEntity<List<CompilationDto>> getAll(@RequestParam(value = "pinned", required = false) Boolean pinned,
                                                        @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
                                                        @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
         log.info("CompilationsPublicController: GET request received for all compilations from {} size {}, isPinned {}",
