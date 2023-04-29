@@ -60,7 +60,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto toEventFullDto(Event event, Long views, Long confirmedRequests) {
+    public static EventFullDto toEventFullDto(Event event, Long views, Integer confirmedRequests) {
         return EventFullDto.builder()
                 .annotation(event.getAnnotation())
                 .category(toCategoryDto(event.getCategory()))
@@ -81,7 +81,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventShortDto toEventShortDto(Event event, Long confirmedRequests, Long views) {
+    public static EventShortDto toEventShortDto(Event event, Integer confirmedRequests, Long views) {
         return EventShortDto.builder()
                 .id(event.getId())
                 .title(event.getTitle())
@@ -96,14 +96,15 @@ public class EventMapper {
     }
 
     public static List<EventFullDto> toEventFullDtoList(Set<Event> events, Map<String, Long> viewsByEvents,
-                                                        Map<Long, Long> confirmedRequestsByEvents) {
+                                                        Map<Long, Integer> confirmedRequestsByEvents) {
         return events.stream()
-                .map(event -> toEventFullDto(event, confirmedRequestsByEvents.get(event.getId()),
-                        viewsByEvents.get(String.format("/events/%s", event.getId())))).collect(Collectors.toList());
+                .map(event -> toEventFullDto(event,
+                        viewsByEvents.get(String.format("/events/%s", event.getId())),
+                        confirmedRequestsByEvents.get(event.getId()))).collect(Collectors.toList());
     }
 
     public static List<EventShortDto> toEventShortDtoList(Set<Event> events, Map<String, Long> viewsByEvents,
-                                                          Map<Long, Long> confirmedRequestsByEvents) {
+                                                          Map<Long, Integer> confirmedRequestsByEvents) {
         return events.stream()
                 .map(event -> toEventShortDto(event, confirmedRequestsByEvents.get(event.getId()),
                         viewsByEvents.get(String.format("/events/%s", event.getId())))).collect(Collectors.toList());

@@ -47,7 +47,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
         Set<Event> events = new HashSet<>(eventsRepository.getEventPublicSearch(text, categories, paid, rangeStart, rangeEnd,
                 available, State.PUBLISHED, pageable).getContent());
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
-        Map<Long, Long> confirmedRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> confirmedRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> result = toEventShortDtoList(events, views, confirmedRequests);
         if (sort != null) {
             if (sort.equals(Sorting.EVENT_DATE)) {
@@ -73,7 +73,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
                 .orElseThrow(() -> new NotFoundException("Event with id = " + id + " not found."));
         HitDto hitDto = new HitDto("main-service", request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
         statsService.createHit(hitDto);
-        long confirmedRequests = requestsRepository.findByEvent(event).size();
+        int confirmedRequests = requestsRepository.findByEvent(event).size();
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", id));
         log.info("EventsPublicServiceImpl: Get event by id = {}", id);
         return toEventFullDto(event, views, confirmedRequests);

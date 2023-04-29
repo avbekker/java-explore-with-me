@@ -40,7 +40,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         Set<Event> events = new HashSet<>(eventsRepository.getEventsByAdmin(users, states, categories,
                 rangeStart, rangeEnd, PageRequest.of(from / size, size)).getContent());
         Map<String, Long> viewsByEvents = statsService.getViewsByEvents(new ArrayList<>(events));
-        Map<Long, Long> confirmedRequestsByEvents = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> confirmedRequestsByEvents = statsService.getRequestsByEvents(events);
         return toEventFullDtoList(events, viewsByEvents, confirmedRequestsByEvents);
     }
 
@@ -59,7 +59,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
         }
         event = updateEvent(event, updateEvent);
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
-        long confirmedRequests = requestsRepository.findByEvent(event).size();
+        int confirmedRequests = requestsRepository.findByEvent(event).size();
         return toEventFullDto(event, views, confirmedRequests);
     }
 

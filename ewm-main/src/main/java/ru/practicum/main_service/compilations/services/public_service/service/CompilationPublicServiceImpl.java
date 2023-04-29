@@ -46,7 +46,7 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
                 .orElseThrow(() -> new NotFoundException("Compilation with id = " + id + " not found."));
         Set<Event> events = compilation.getEvents();
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
-        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
         log.info("CompilationPublicServiceImpl: Get compilation by id = {}", id);
         return toCompilationDto(compilation, eventsShortDto);
@@ -56,7 +56,7 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
         Set<Event> events = new HashSet<>();
         compilations.forEach(compilation -> events.addAll(compilation.getEvents()));
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
-        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
         Map<Long, List<EventShortDto>> result = new HashMap<>();
         compilations.forEach(compilation -> result.put(compilation.getId(),
                 toEventShortDtoList(compilation.getEvents(), views, confirmationRequests)));

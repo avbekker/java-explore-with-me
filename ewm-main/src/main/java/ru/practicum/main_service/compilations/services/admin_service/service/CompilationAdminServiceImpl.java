@@ -81,7 +81,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
 
     private List<EventShortDto> getEventShortDtoList(Set<Event> events) {
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
-        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
         return toEventShortDtoList(events, views, confirmationRequests);
     }
 }

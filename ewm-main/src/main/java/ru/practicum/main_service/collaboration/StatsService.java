@@ -4,14 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.ViewStatDto;
+import ru.practicum.main_service.enums.Status;
 import ru.practicum.main_service.events.model.Event;
-import ru.practicum.main_service.requests.model.Request;
 import ru.practicum.main_service.requests.repository.RequestsRepository;
 import ru.practicum.stats_client.StatisticsClient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,20 +25,9 @@ public class StatsService {
     private final RequestsRepository requestsRepository;
     private final StatisticsClient statisticsClient;
 
-    public Map<Long, Long> getRequestsByEvents(Set<Event> events) {
-        Map<Long, Long> confirmedRequestsByEvents = new HashMap<>();
-        List<Request> requests = requestsRepository.findAllByEventIn(events);
-        for (Event event : events) {
-            List<Long> requestsIds = new ArrayList<>();
-            for (Request request : requests) {
-                if (request.getEvent().getId().equals(event.getId())) {
-                    requestsIds.add(request.getId());
-                }
-            }
-            long confirmationRequests = requestsIds.size();
-            confirmedRequestsByEvents.put(event.getId(), confirmationRequests);
-        }
-        return confirmedRequestsByEvents;
+    public Map<Long, Integer> getRequestsByEvents(Set<Event> events) {
+        List<Long> eventsId = events.stream().map(Event::getId).collect(Collectors.toList());
+        return requestsRepository.findRequestsByEvent(eventsId, Status.CONFIRMED);
     }
 
     public Map<String, Long> getViewsByEvents(List<Event> events) {

@@ -49,7 +49,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Set<Event> events = new HashSet<>(eventsRepository.findByInitiator(user, PageRequest.of(from / size, size)).getContent());
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
-        Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
         log.info("EventsPrivateServiceImpl: Get events by user id = {} from {} size {}", userId, from, size);
         return toEventShortDtoList(events, views, confirmationRequests);
     }
@@ -77,7 +77,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
-        long confirmedRequests = requestsRepository.findByEvent(event).size();
+        int confirmedRequests = requestsRepository.findByEvent(event).size();
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         log.info("EventsPrivateServiceImpl: Get event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
@@ -98,7 +98,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         }
         event = updateEvent(event, updateEvent);
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
-        long confirmedRequests = requestsRepository.findByEvent(event).size();
+        int confirmedRequests = requestsRepository.findByEvent(event).size();
         log.info("EventsPrivateServiceImpl: Update event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
