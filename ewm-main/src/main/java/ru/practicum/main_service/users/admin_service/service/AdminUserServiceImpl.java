@@ -34,12 +34,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAll(List<Long> ids, int page, int size) {
-        List<User> users;
-        if (ids == null || ids.isEmpty()) {
-            users = repository.findAll(PageRequest.of(page, size)).getContent();
-        } else {
-            users = repository.findByIdIn(ids, PageRequest.of(page, size)).getContent();
-        }
+        List<User> users = repository.findByIdIn(ids, PageRequest.of(page, size)).getContent();
         log.info("AdminUserServiceImpl: GET request received for {}.", ids);
         return toUserDtoList(users);
     }
