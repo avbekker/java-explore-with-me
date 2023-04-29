@@ -16,10 +16,7 @@ import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.events.repository.EventsRepository;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilation;
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDto;
@@ -36,17 +33,14 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
     @Transactional
     @Override
     public CompilationDto create(NewCompilationDto newCompilationDto) {
-        Compilation compilation;
-        if (newCompilationDto.getEvents() == null || newCompilationDto.getEvents().isEmpty()) {
-            compilation = toCompilation(newCompilationDto, Set.of());
-            compilationRepository.save(compilation);
-            log.info("CompilationAdminServiceImpl: New compilation created.");
-            return toCompilationDto(compilation, List.of());
+        Set<Event> events = new HashSet<>();
+        List<EventShortDto> eventsShortDto = new ArrayList<>();
+        if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
+            events = eventsRepository.findByIdIn(newCompilationDto.getEvents());
+            eventsShortDto = getEventShortDtoList(events);
         }
-        Set<Event> events = eventsRepository.findByIdIn(newCompilationDto.getEvents());
-        compilation = toCompilation(newCompilationDto, events);
+        Compilation compilation = toCompilation(newCompilationDto, events);
         compilationRepository.save(compilation);
-        List<EventShortDto> eventsShortDto = getEventShortDtoList(events);
         log.info("CompilationAdminServiceImpl: New compilation created.");
         return toCompilationDto(compilation, eventsShortDto);
     }
