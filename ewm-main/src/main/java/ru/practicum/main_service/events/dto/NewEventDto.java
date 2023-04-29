@@ -21,7 +21,6 @@ public class NewEventDto {
     @Size(min = 20, max = 2000)
     private String annotation;
 
-    @NotNull
     private int category;
 
     @NotBlank
@@ -40,7 +39,7 @@ public class NewEventDto {
     @PositiveOrZero
     private int participantLimit;
 
-    private boolean requestModeration;
+    private boolean requestModeration = true;
 
     @Size(min = 3, max = 120)
     private String title;

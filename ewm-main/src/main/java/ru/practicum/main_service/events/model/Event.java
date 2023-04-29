@@ -1,6 +1,5 @@
 package ru.practicum.main_service.events.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.main_service.categories.model.Category;
 import ru.practicum.main_service.compilations.model.Compilation;
@@ -31,7 +30,6 @@ public class Event {
     private Category category;
 
     @Column(name = "CREATED_ON")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
 
     private String description;
@@ -43,7 +41,6 @@ public class Event {
     @JoinColumn(name = "INITIATOR_ID")
     private User initiator;
 
-    @Embedded
     @JoinColumns({@JoinColumn(name = "LOT"), @JoinColumn(name = "LON")})
     private Location location;
 
