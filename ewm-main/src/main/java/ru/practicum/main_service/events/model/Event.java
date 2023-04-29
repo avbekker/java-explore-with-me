@@ -8,7 +8,6 @@ import ru.practicum.main_service.enums.State;
 import ru.practicum.main_service.users.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 2000)
     private String annotation;
 
     @ManyToOne
@@ -36,7 +34,6 @@ public class Event {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
 
-    @Size(max = 7000)
     private String description;
 
     @Column(name = "EVENT_DATE")
@@ -62,10 +59,8 @@ public class Event {
     private boolean requestModeration;
 
     @Enumerated(EnumType.STRING)
-    @Size(max = 50)
     private State state;
 
-    @Size(max = 120)
     private String title;
 
     @ManyToMany
