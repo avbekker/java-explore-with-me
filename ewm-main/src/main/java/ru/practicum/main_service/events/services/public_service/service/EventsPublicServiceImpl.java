@@ -46,7 +46,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
         Pageable pageable = PageRequest.of(from / size, size);
         Set<Event> events = new HashSet<>(eventsRepository.getEventPublicSearch(text, categories, paid, rangeStart, rangeEnd,
                 available, State.PUBLISHED, pageable).getContent());
-        Map<String, Long> views = statsService.getViewsByEvents(events);
+        Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Long> confirmedRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> result = toEventShortDtoList(events, views, confirmedRequests);
         if (sort != null) {
@@ -74,7 +74,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
         HitDto hitDto = new HitDto("main-service", request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
         statsService.createHit(hitDto);
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        Long views = statsService.getViewsByEvents(Set.of(event)).get(String.format("/events/%s", id));
+        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", id));
         log.info("EventsPublicServiceImpl: Get event by id = {}", id);
         return toEventFullDto(event, views, confirmedRequests);
     }

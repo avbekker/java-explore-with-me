@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class StatsService {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private final RequestsRepository requestsRepository;
     private final StatisticsClient statisticsClient;
 
@@ -36,10 +38,9 @@ public class StatsService {
         return confirmedRequestsByEvents;
     }
 
-    public Map<String, Long> getViewsByEvents(Set<Event> events) {
-        DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String start = LocalDateTime.now().minusYears(2).format(customFormatter);
-        String end = LocalDateTime.now().plusYears(2).format(customFormatter);
+    public Map<String, Long> getViewsByEvents(List<Event> events) {
+        String start = LocalDateTime.now().minusYears(2).format(FORMATTER);
+        String end = LocalDateTime.now().format(FORMATTER);
         List<String> eventUris = events.stream().map(e -> String.format("/events/%s", e.getId())).collect(Collectors.toList());
         List<ViewStatDto> viewStatDto = statisticsClient.getViews(start, end, eventUris);
         Map<String, Long> result = new HashMap<>();

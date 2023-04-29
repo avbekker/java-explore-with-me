@@ -39,7 +39,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
         Set<Event> events = new HashSet<>(eventsRepository.getEventsByAdmin(users, states, categories,
                 rangeStart, rangeEnd, PageRequest.of(from / size, size)).getContent());
-        Map<String, Long> viewsByEvents = statsService.getViewsByEvents(events);
+        Map<String, Long> viewsByEvents = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Long> confirmedRequestsByEvents = statsService.getRequestsByEvents(events);
         return toEventFullDtoList(events, viewsByEvents, confirmedRequestsByEvents);
     }
@@ -58,7 +58,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
                     " should be earlier than event date " + updateEvent.getEventDate());
         }
         event = updateEvent(event, updateEvent);
-        Long views = statsService.getViewsByEvents(Set.of(event)).get(String.format("/events/%s", eventId));
+        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
         return toEventFullDto(event, views, confirmedRequests);
     }

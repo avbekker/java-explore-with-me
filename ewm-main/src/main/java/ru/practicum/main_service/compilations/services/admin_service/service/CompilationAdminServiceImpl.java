@@ -16,6 +16,7 @@ import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.events.repository.EventsRepository;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +80,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
     }
 
     private List<EventShortDto> getEventShortDtoList(Set<Event> events) {
-        Map<String, Long> views = statsService.getViewsByEvents(events);
+        Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         return toEventShortDtoList(events, views, confirmationRequests);
     }
