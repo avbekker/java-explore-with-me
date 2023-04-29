@@ -166,12 +166,18 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
                 event.setState(State.CANCELED);
             }
         }
-        event.setAnnotation(Objects.requireNonNullElse(updateEvent.getAnnotation(), event.getAnnotation()));
-        event.setDescription(Objects.requireNonNullElse(updateEvent.getDescription(), event.getDescription()));
+        if (updateEvent.getAnnotation() != null && !updateEvent.getAnnotation().isBlank()) {
+            event.setAnnotation(updateEvent.getAnnotation());
+        }
+        if (updateEvent.getDescription() != null && !updateEvent.getDescription().isBlank()) {
+            event.setDescription(updateEvent.getDescription());
+        }
         event.setPaid(Objects.requireNonNullElse(updateEvent.getPaid(), event.getPaid()));
         event.setParticipantLimit(Objects.requireNonNullElse(updateEvent.getParticipantLimit(), event.getParticipantLimit()));
         event.setRequestModeration(Objects.requireNonNullElse(updateEvent.getRequestModeration(), event.isRequestModeration()));
-        event.setTitle(Objects.requireNonNullElse(updateEvent.getTitle(), event.getTitle()));
+        if (updateEvent.getTitle() != null && !updateEvent.getTitle().isBlank()) {
+            event.setTitle(updateEvent.getTitle());
+        }
         if (updateEvent.getCategory() != null) {
             Category category = categoriesRepository.findById(updateEvent.getCategory())
                     .orElseThrow(() -> new NotFoundException("Category with id = " +
