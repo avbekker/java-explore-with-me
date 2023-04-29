@@ -18,6 +18,7 @@ import ru.practicum.main_service.excemptions.NotFoundException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilation;
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDto;
@@ -36,12 +37,12 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
     public CompilationDto create(NewCompilationDto newCompilationDto) {
         Compilation compilation;
         if (newCompilationDto.getEvents() == null || newCompilationDto.getEvents().isEmpty()) {
-            compilation = toCompilation(newCompilationDto, List.of());
+            compilation = toCompilation(newCompilationDto, Set.of());
             compilationRepository.save(compilation);
             log.info("CompilationAdminServiceImpl: New compilation created.");
             return toCompilationDto(compilation, List.of());
         }
-        List<Event> events = eventsRepository.findByIdIn(newCompilationDto.getEvents());
+        Set<Event> events = eventsRepository.findByIdIn(newCompilationDto.getEvents());
         compilation = toCompilation(newCompilationDto, events);
         compilationRepository.save(compilation);
         List<EventShortDto> eventsShortDto = getEventShortDtoList(events);
@@ -54,7 +55,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
     public CompilationDto update(Long compilationId, UpdateCompilationRequest updateCompilationRequest) {
         Compilation compilation = compilationRepository.findById(compilationId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id = " + compilationId + " not found."));
-        List<Event> events = compilation.getEvents();
+        Set<Event> events = compilation.getEvents();
         if (updateCompilationRequest.getEvents() != null) {
             events = eventsRepository.findByIdInAndState(updateCompilationRequest.getEvents(), State.PUBLISHED);
         }
@@ -77,7 +78,7 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
         log.info("CompilationAdminServiceImpl: compilation id = {} deleted.", compilationId);
     }
 
-    private List<EventShortDto> getEventShortDtoList(List<Event> events) {
+    private List<EventShortDto> getEventShortDtoList(Set<Event> events) {
         Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         return toEventShortDtoList(events, views, confirmationRequests);

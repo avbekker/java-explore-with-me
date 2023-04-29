@@ -13,10 +13,7 @@ import ru.practicum.main_service.events.dto.EventShortDto;
 import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDto;
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDtoList;
@@ -42,7 +39,7 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
     public CompilationDto getById(Long id) {
         Compilation compilation = compilationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Compilation with id = " + id + " not found."));
-        List<Event> events = compilation.getEvents();
+        Set<Event> events = compilation.getEvents();
         Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
@@ -51,7 +48,7 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
     }
 
     private Map<Long, List<EventShortDto>> getEventsShortDtoMap(List<Compilation> compilations) {
-        List<Event> events = new ArrayList<>();
+        Set<Event> events = new HashSet<>();
         compilations.forEach(compilation -> events.addAll(compilation.getEvents()));
         Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);

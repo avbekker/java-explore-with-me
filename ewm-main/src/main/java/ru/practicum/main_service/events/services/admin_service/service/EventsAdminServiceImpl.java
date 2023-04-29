@@ -19,9 +19,7 @@ import ru.practicum.main_service.excemptions.NotFoundException;
 import ru.practicum.main_service.requests.repository.RequestsRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventFullDto;
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventFullDtoList;
@@ -39,8 +37,8 @@ public class EventsAdminServiceImpl implements EventsAdminService {
     @Override
     public List<EventFullDto> getAll(List<Long> users, List<State> states, List<Long> categories,
                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
-        List<Event> events = eventsRepository.getEventsByAdmin(users, states, categories,
-                rangeStart, rangeEnd, PageRequest.of(from / size, size)).getContent();
+        Set<Event> events = new HashSet<>(eventsRepository.getEventsByAdmin(users, states, categories,
+                rangeStart, rangeEnd, PageRequest.of(from / size, size)).getContent());
         Map<String, Long> viewsByEvents = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmedRequestsByEvents = statsService.getRequestsByEvents(events);
         return toEventFullDtoList(events, viewsByEvents, confirmedRequestsByEvents);
@@ -60,7 +58,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
                     " should be earlier than event date " + updateEvent.getEventDate());
         }
         event = updateEvent(event, updateEvent);
-        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
+        Long views = statsService.getViewsByEvents(Set.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
         return toEventFullDto(event, views, confirmedRequests);
     }

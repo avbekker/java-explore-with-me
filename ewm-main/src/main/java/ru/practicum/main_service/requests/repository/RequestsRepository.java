@@ -8,9 +8,10 @@ import ru.practicum.main_service.users.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface RequestsRepository extends JpaRepository<Request, Long> {
-    List<Request> findAllByEventIn(List<Event> events);
+    List<Request> findAllByEventIn(Set<Event> events);
 
     List<Request> findByRequester(User requester);
 

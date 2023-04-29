@@ -11,10 +11,7 @@ import ru.practicum.stats_client.StatisticsClient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,7 +20,7 @@ public class StatsService {
     private final RequestsRepository requestsRepository;
     private final StatisticsClient statisticsClient;
 
-    public Map<Long, Long> getRequestsByEvents(List<Event> events) {
+    public Map<Long, Long> getRequestsByEvents(Set<Event> events) {
         Map<Long, Long> confirmedRequestsByEvents = new HashMap<>();
         List<Request> requests = requestsRepository.findAllByEventIn(events);
         for (Event event : events) {
@@ -39,7 +36,7 @@ public class StatsService {
         return confirmedRequestsByEvents;
     }
 
-    public Map<String, Long> getViewsByEvents(List<Event> events) {
+    public Map<String, Long> getViewsByEvents(Set<Event> events) {
         DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String start = LocalDateTime.now().minusYears(2).format(customFormatter);
         String end = LocalDateTime.now().plusYears(2).format(customFormatter);

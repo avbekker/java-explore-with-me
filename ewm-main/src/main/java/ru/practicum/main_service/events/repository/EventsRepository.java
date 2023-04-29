@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface EventsRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e " +
@@ -49,9 +50,9 @@ public interface EventsRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findByInitiator(User initiator, Pageable pageable);
 
-    List<Event> findByIdInAndState(List<Long> eventsId, State state);
+    Set<Event> findByIdInAndState(List<Long> eventsId, State state);
 
-    List<Event> findByIdIn(List<Long> eventsId);
+    Set<Event> findByIdIn(List<Long> eventsId);
 
     Optional<Event> findByInitiatorAndId(User initiator, Long eventId);
 }

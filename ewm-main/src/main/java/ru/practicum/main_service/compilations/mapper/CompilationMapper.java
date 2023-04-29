@@ -8,13 +8,14 @@ import ru.practicum.main_service.events.model.Event;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CompilationMapper {
     private CompilationMapper() {
     }
 
-    public static Compilation toCompilation(NewCompilationDto newCompilationDto, List<Event> events) {
+    public static Compilation toCompilation(NewCompilationDto newCompilationDto, Set<Event> events) {
         return Compilation.builder()
                 .id(null)
                 .pinned(newCompilationDto.isPinned())

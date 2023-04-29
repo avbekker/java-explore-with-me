@@ -4,7 +4,7 @@ import lombok.*;
 import ru.practicum.main_service.events.model.Event;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,5 +27,5 @@ public class Compilation {
     @JoinTable(name = "EVENT_COMPILATION",
             joinColumns = @JoinColumn(name = "COMPILATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
-    private List<Event> events;
+    private Set<Event> events;
 }

@@ -25,9 +25,7 @@ import ru.practicum.main_service.users.model.User;
 import ru.practicum.main_service.users.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.*;
@@ -49,7 +47,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
     public List<EventShortDto> getByUser(Long userId, Integer from, Integer size) {
         User user = usersRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id = " + userId + " not found."));
-        List<Event> events = eventsRepository.findByInitiator(user, PageRequest.of(from / size, size)).getContent();
+        Set<Event> events = new HashSet<>(eventsRepository.findByInitiator(user, PageRequest.of(from / size, size)).getContent());
         Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmationRequests = statsService.getRequestsByEvents(events);
         log.info("EventsPrivateServiceImpl: Get events by user id = {} from {} size {}", userId, from, size);
@@ -80,7 +78,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         Event event = eventsRepository.findByInitiatorAndId(user, eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + eventId + " not found."));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
+        Long views = statsService.getViewsByEvents(Set.of(event)).get(String.format("/events/%s", eventId));
         log.info("EventsPrivateServiceImpl: Get event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);
     }
@@ -99,7 +97,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
             throw new BadRequestException("Only pending or canceled events can be changed");
         }
         event = updateEvent(event, updateEvent);
-        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", eventId));
+        Long views = statsService.getViewsByEvents(Set.of(event)).get(String.format("/events/%s", eventId));
         long confirmedRequests = requestsRepository.findByEvent(event).size();
         log.info("EventsPrivateServiceImpl: Update event id = {} user id = {}", eventId, userId);
         return toEventFullDto(event, views, confirmedRequests);

@@ -20,9 +20,7 @@ import ru.practicum.main_service.requests.repository.RequestsRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventFullDto;
 import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDtoList;
@@ -46,8 +44,8 @@ public class EventsPublicServiceImpl implements EventsPublicService {
             }
         }
         Pageable pageable = PageRequest.of(from / size, size);
-        List<Event> events = eventsRepository.getEventPublicSearch(text, categories, paid, rangeStart, rangeEnd,
-                available, State.PUBLISHED, pageable).getContent();
+        Set<Event> events = new HashSet<>(eventsRepository.getEventPublicSearch(text, categories, paid, rangeStart, rangeEnd,
+                available, State.PUBLISHED, pageable).getContent());
         Map<String, Long> views = statsService.getViewsByEvents(events);
         Map<Long, Long> confirmedRequests = statsService.getRequestsByEvents(events);
         List<EventShortDto> result = toEventShortDtoList(events, views, confirmedRequests);
@@ -76,7 +74,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
         HitDto hitDto = new HitDto("main-service", request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
         statsService.createHit(hitDto);
         long confirmedRequests = requestsRepository.findByEvent(event).size();
-        Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", id));
+        Long views = statsService.getViewsByEvents(Set.of(event)).get(String.format("/events/%s", id));
         log.info("EventsPublicServiceImpl: Get event by id = {}", id);
         return toEventFullDto(event, views, confirmedRequests);
     }

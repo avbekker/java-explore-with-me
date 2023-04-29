@@ -12,6 +12,7 @@ import ru.practicum.main_service.users.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.categories.mapper.CategoryMapper.toCategoryDto;
@@ -94,14 +95,14 @@ public class EventMapper {
                 .build();
     }
 
-    public static List<EventFullDto> toEventFullDtoList(List<Event> events, Map<String, Long> viewsByEvents,
+    public static List<EventFullDto> toEventFullDtoList(Set<Event> events, Map<String, Long> viewsByEvents,
                                                         Map<Long, Long> confirmedRequestsByEvents) {
         return events.stream()
                 .map(event -> toEventFullDto(event, confirmedRequestsByEvents.get(event.getId()),
                         viewsByEvents.get(String.format("/events/%s", event.getId())))).collect(Collectors.toList());
     }
 
-    public static List<EventShortDto> toEventShortDtoList(List<Event> events, Map<String, Long> viewsByEvents,
+    public static List<EventShortDto> toEventShortDtoList(Set<Event> events, Map<String, Long> viewsByEvents,
                                                           Map<Long, Long> confirmedRequestsByEvents) {
         return events.stream()
                 .map(event -> toEventShortDto(event, confirmedRequestsByEvents.get(event.getId()),
