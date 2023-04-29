@@ -29,6 +29,8 @@ import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDt
 @RequiredArgsConstructor
 @Slf4j
 public class EventsPublicServiceImpl implements EventsPublicService {
+    private static final String APP_NAME = "${event.service.app.name}";
+
     private final EventsRepository eventsRepository;
     private final RequestsRepository requestsRepository;
     private final StatsService statsService;
@@ -57,7 +59,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
             }
         }
         statsService.createHit(HitDto.builder()
-                .app("main-container")
+                .app(APP_NAME)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .created(LocalDateTime.now())
