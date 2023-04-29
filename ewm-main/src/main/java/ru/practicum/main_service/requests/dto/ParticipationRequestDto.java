@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.main_service.enums.Status;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,6 +18,7 @@ public class ParticipationRequestDto {
     private Long event;
     private Long id;
     private Long requester;
+    @Size(max = 50)
     private Status status;
 }
 
