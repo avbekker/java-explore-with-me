@@ -11,10 +11,7 @@ import ru.practicum.stats_client.StatisticsClient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -31,14 +28,15 @@ public class StatsService {
     }
 
     public Map<String, Long> getViewsByEvents(List<Event> events) {
-        String start = LocalDateTime.now().minusHours(10).format(FORMATTER);
-//        LocalDateTime startDate = events.stream()
-//                .map(Event::getPublishedOn)
-//                .filter(Objects::nonNull)
-//                .min(LocalDateTime::compareTo)
-//                .get();
-//        String start = startDate.format(FORMATTER);
-
+        LocalDateTime startDate;
+        Optional<LocalDateTime> startOptional = events.stream().map(Event::getPublishedOn)
+                .filter(Objects::nonNull).min(LocalDateTime::compareTo);
+        if (startOptional.isPresent()) {
+            startDate = startOptional.get();
+        } else {
+            return new HashMap<>();
+        }
+        String start = startDate.format(FORMATTER);
         String end = LocalDateTime.now().format(FORMATTER);
         List<String> eventUris = events.stream().map(e -> String.format("/events/%s", e.getId())).collect(Collectors.toList());
         List<ViewStatDto> viewStatDto = statisticsClient.getViews(start, end, eventUris);

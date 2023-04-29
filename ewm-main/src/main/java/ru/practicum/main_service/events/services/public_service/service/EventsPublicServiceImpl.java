@@ -87,11 +87,16 @@ public class EventsPublicServiceImpl implements EventsPublicService {
     public EventFullDto getById(Long id, HttpServletRequest request) {
         Event event = eventsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Event with id = " + id + " not found."));
-        HitDto hitDto = new HitDto("main-service", request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
-        statsService.createHit(hitDto);
         int confirmedRequests = requestsRepository.findByEvent(event).size();
         Long views = statsService.getViewsByEvents(List.of(event)).get(String.format("/events/%s", id));
+        EventFullDto result = toEventFullDto(event, views, confirmedRequests);
+        statsService.createHit(HitDto.builder()
+                .app(APP_NAME)
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .created(LocalDateTime.now())
+                .build());
         log.info("EventsPublicServiceImpl: Get event by id = {}", id);
-        return toEventFullDto(event, views, confirmedRequests);
+        return result;
     }
 }

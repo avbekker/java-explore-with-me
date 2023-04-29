@@ -66,7 +66,7 @@ public class EventsAdminServiceImpl implements EventsAdminService {
     private Event updateEvent(Event event, UpdateEventAdminRequest updateEvent) {
         if (updateEvent.getStateAction().equals(StateActionAdmin.PUBLISH_EVENT)) {
             event.setState(State.PUBLISHED);
-            event.setPublishedOn(LocalDateTime.now());
+            event.setPublishedOn(LocalDateTime.now().withNano(0));
             event.setRequestModeration(true);
         } else if (updateEvent.getStateAction().equals(StateActionAdmin.REJECT_EVENT)) {
             event.setState(State.CANCELED);
