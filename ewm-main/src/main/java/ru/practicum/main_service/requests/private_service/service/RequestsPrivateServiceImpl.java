@@ -57,7 +57,7 @@ public class RequestsPrivateServiceImpl implements RequestsPrivateService {
             throw new BadRequestException("Request is already created with id = " + request.getId());
         }
         List<Request> requests = requestsRepository.findAllByEventId(eventId);
-        if (event.getParticipantLimit() == 0 || event.getParticipantLimit() <= requests.size()) {
+        if (event.getParticipantLimit() != 0 && event.getParticipantLimit() <= requests.size()) {
             throw new BadRequestException("Participation limit have been reached.");
         }
         Request result;

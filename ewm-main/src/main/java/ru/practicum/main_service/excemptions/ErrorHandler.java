@@ -41,7 +41,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFound(final RuntimeException e) {
+    public ErrorResponse handleNotFound(final NotFoundException e) {
         log.error(e.getMessage());
         return ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -71,6 +71,18 @@ public class ErrorHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CONFLICT.name())
                 .reason("Integrity constraint has been violated.")
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleThrowable(final Throwable e) {
+        log.error(e.getMessage());
+        return ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                .reason("Throwable exception catch.")
                 .message(e.getMessage())
                 .build();
     }

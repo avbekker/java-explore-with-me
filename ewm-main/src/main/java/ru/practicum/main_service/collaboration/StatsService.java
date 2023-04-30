@@ -34,17 +34,13 @@ public class StatsService {
         if (startOptional.isPresent()) {
             startDate = startOptional.get();
         } else {
-            return new HashMap<>();
+            return Map.of();
         }
         String start = startDate.format(FORMATTER);
         String end = LocalDateTime.now().format(FORMATTER);
         List<String> eventUris = events.stream().map(e -> String.format("/events/%s", e.getId())).collect(Collectors.toList());
-        List<ViewStatDto> viewStatDto = statisticsClient.getViews(start, end, eventUris);
-        Map<String, Long> result = new HashMap<>();
-        for (ViewStatDto viewStat : viewStatDto) {
-            result.put(viewStat.getUri(), viewStat.getHits());
-        }
-        return result;
+        return statisticsClient.getViews(start, end, eventUris).stream()
+                .collect(Collectors.toMap(ViewStatDto::getUri, ViewStatDto::getHits));
     }
 
     public void createHit(HitDto hitDto) {

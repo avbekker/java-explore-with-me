@@ -27,6 +27,7 @@ public class NewEventDto {
     @Size(min = 20, max = 7000)
     private String description;
 
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 

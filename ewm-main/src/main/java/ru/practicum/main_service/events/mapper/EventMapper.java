@@ -98,14 +98,16 @@ public class EventMapper {
                                                         Map<Long, Integer> confirmedRequestsByEvents) {
         return events.stream()
                 .map(event -> toEventFullDto(event,
-                        viewsByEvents.get(String.format("/events/%s", event.getId())),
-                        confirmedRequestsByEvents.get(event.getId()))).collect(Collectors.toList());
+                        viewsByEvents.getOrDefault(String.format("/events/%s", event.getId()), 0L),
+                        confirmedRequestsByEvents.getOrDefault(event.getId(), 0)))
+                .collect(Collectors.toList());
     }
 
     public static List<EventShortDto> toEventShortDtoList(Set<Event> events, Map<String, Long> viewsByEvents,
                                                           Map<Long, Integer> confirmedRequestsByEvents) {
         return events.stream()
-                .map(event -> toEventShortDto(event, confirmedRequestsByEvents.get(event.getId()),
-                        viewsByEvents.get(String.format("/events/%s", event.getId())))).collect(Collectors.toList());
+                .map(event -> toEventShortDto(event, confirmedRequestsByEvents.getOrDefault(event.getId(), 0),
+                        viewsByEvents.getOrDefault(String.format("/events/%s", event.getId()), 0L)))
+                .collect(Collectors.toList());
     }
 }

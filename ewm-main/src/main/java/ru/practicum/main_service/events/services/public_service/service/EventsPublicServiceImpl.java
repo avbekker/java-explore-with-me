@@ -55,7 +55,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
             List<Long> eventsIds = eventList.stream().map(Event::getId).collect(Collectors.toList());
             Map<Long, Integer> requests = requestsRepository.findRequestsByEvent(eventsIds, Status.CONFIRMED);
             for (Event event : eventList) {
-                if (event.getParticipantLimit() != 0 && event.getParticipantLimit() > requests.get(event.getId())) {
+                if (event.getParticipantLimit() == 0 || event.getParticipantLimit() > requests.get(event.getId())) {
                     events.add(event);
                 }
             }
