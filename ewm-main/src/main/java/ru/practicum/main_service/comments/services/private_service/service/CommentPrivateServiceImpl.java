@@ -8,6 +8,7 @@ import ru.practicum.main_service.comments.dto.CommentDto;
 import ru.practicum.main_service.comments.dto.NewCommentDto;
 import ru.practicum.main_service.comments.model.Comment;
 import ru.practicum.main_service.comments.repository.CommentRepository;
+import ru.practicum.main_service.enums.State;
 import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.events.repository.EventsRepository;
 import ru.practicum.main_service.excemptions.CommentException;
@@ -32,6 +33,9 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
     public CommentDto create(Long userId, Long eventId, NewCommentDto commentDto) {
         User creator = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found."));
+        if (!event.getState().equals(State.PUBLISHED)) {
+            throw new CommentException("Comment can not be posted on event which is cancelled or in pending status.");
+        }
         Comment comment = toComment(commentDto, creator, event);
         CommentDto result = toCommentDto(commentRepository.save(comment));
         log.info("CommentPrivateServiceImpl: Created new comment by user id = {} for event id = {}", userId, eventId);
