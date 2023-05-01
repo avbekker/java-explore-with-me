@@ -5,3 +5,4 @@
 Приложение ***"Explore With Me"*** — афиша. В этой афише можно предложить какое-либо событие от выставки до похода в кино и собрать компанию для участия в нём.
 
 ### Feature comments
+- pull request: https://github.com/avbekker/java-explore-with-me/pull/6
