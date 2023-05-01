@@ -1631,33 +1631,10 @@
       "value": "http://localhost:8080"
     },
     {
-      "key": "eventId1",
-      "value": "1"
-    },
-    {
-      "key": "eventId2",
-      "value": "2",
-      "type": "string"
-    },
-    {
-      "key": "userId1",
-      "value": "1",
-      "type": "string"
-    },
-    {
-      "key": "userId2",
-      "value": "2",
-      "type": "string"
-    },
-    {
-      "key": "userId3",
-      "value": "3",
-      "type": "string"
-    },
-    {
       "key": "categoryId1",
       "value": "1",
-      "type": "string"
+      "type": "string",
+      "disabled": true
     }
   ]
 }
