@@ -23,9 +23,9 @@ public class CommentPublicController {
     private final CommentPublicService service;
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<List<CommentDto>> findByEvent(@PathVariable Long eventId,
-                                                        @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                                        @RequestParam(defaultValue = "10") @Positive Integer size) {
+    public ResponseEntity<List<CommentDto>> getByEvent(@PathVariable Long eventId,
+                                                       @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                                       @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("CommentPublicController: GET request received for all comments of event id = {}", eventId);
         return ResponseEntity.ok(service.getByEvent(eventId, from, size));
     }

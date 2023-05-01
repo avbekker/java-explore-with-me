@@ -38,7 +38,7 @@ public class CommentPrivateController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<CommentDto> findById(@PathVariable Long userId, @PathVariable Long commentId) {
+    public ResponseEntity<CommentDto> getById(@PathVariable Long userId, @PathVariable Long commentId) {
         log.info("CommentPrivateController: GET request received for comment id = {}, " +
                 "from user id = {}", commentId, userId);
         return ResponseEntity.ok(service.getById(userId, commentId));

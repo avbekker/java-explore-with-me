@@ -1,0 +1,1663 @@
+{
+  "info": {
+    "_postman_id": "5c62376d-9e61-464d-86e5-26fdf5a2c042",
+    "name": "Test Explore With Me - Feature Comments",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24111067"
+  },
+  "item": [
+    {
+      "name": "Create users, events, category",
+      "item": [
+        {
+          "name": "User 1 create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+                  "});",
+                  "pm.test(\"Has user create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Test user 'id' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.globals.set(\"userId1\", jsonData.id);",
+                  "});",
+                  "pm.test(\"Test user 'email' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData.email, '\"email\" must be \"user1@user.ru\"').to.eql('user1@user.ru');",
+                  "});",
+                  "pm.test(\"Test user 'name' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData.name, '\"name\" must be \"User 1\"').to.eql('User 1');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"User 1\",\n    \"email\": \"user1@user.ru\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User 2 create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+                  "});",
+                  "pm.test(\"Has user create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Test user 'id' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.globals.set(\"userId2\", jsonData.id);",
+                  "});",
+                  "pm.test(\"Test user 'email' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData.email, '\"email\" must be \"user2@user.ru\"').to.eql('user2@user.ru');",
+                  "});",
+                  "pm.test(\"Test user 'name' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData.name, '\"name\" must be \"User 2\"').to.eql('User 2');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"User 2\",\n    \"email\": \"user2@user.ru\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User 3 create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+                  "});",
+                  "pm.test(\"Has user create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Test user 'id' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.globals.set(\"userId3\", jsonData.id);",
+                  "});",
+                  "pm.test(\"Test user 'email' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "    pm.expect(jsonData.email, '\"email\" must be \"user3@user.ru\"').to.eql('user3@user.ru');",
+                  "});",
+                  "pm.test(\"Test user 'name' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData.name, '\"name\" must be \"User 3\"').to.eql('User 3');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"User 3\",\n    \"email\": \"user3@user.ru\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Category 1 create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+                  "});",
+                  "pm.test(\"Has category create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Test category 'id' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.globals.set(\"categoryId1\", jsonData.id);",
+                  "});",
+                  "pm.test(\"Test category 'name' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData.name, '\"name\" must be \"category\"').to.eql('category');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"category\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Event 1 create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+                  "});",
+                  "pm.test(\"Has comment create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Has comment create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Test comment 'id' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.globals.set(\"eventId1\", jsonData.id);",
+                  "});",
+                  "pm.test(\"Test event 'title' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('title');",
+                  "});",
+                  "pm.test(\"Test event 'annotation' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('annotation');",
+                  "});",
+                  "pm.test(\"Test event 'category' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('category');",
+                  "});",
+                  "pm.test(\"Test event 'name' paid\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('paid');",
+                  "});",
+                  "pm.test(\"Test event 'eventDate' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('eventDate');",
+                  "});",
+                  "pm.test(\"Test event 'initiator' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('initiator');",
+                  "});",
+                  "pm.test(\"Test event 'description' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('description');",
+                  "});",
+                  "pm.test(\"Test event 'participantLimit' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('participantLimit');",
+                  "});",
+                  "pm.test(\"Test event 'state' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('state');",
+                  "});",
+                  "pm.test(\"Test event 'createdOn' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('createdOn');",
+                  "});",
+                  "pm.test(\"Test event 'location' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('location');",
+                  "});",
+                  "pm.test(\"Test event 'requestModeration' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('requestModeration');",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"annotation\": \"Event id 1 annotation\",\n\"category\": {{categoryId1}},\n\"description\": \"Event id = 1 description\",\n\"eventDate\": \"2023-05-20 12:00:00\",\n\"location\": {\n\"lat\": 54.999,\n\"lon\": 73.388\n},\n\"paid\": true,\n\"participantLimit\": 10,\n\"requestModeration\": false,\n\"title\": \"Event 1 title\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/:userId/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":userId",
+                "events"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "{{userId1}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Event 2 create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 201\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+                  "});",
+                  "pm.test(\"Has comment create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Has comment create response\", function () {",
+                  "    pm.response.to.be.withBody;",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "pm.test(\"Test comment 'id' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.globals.set(\"eventId2\", jsonData.id);",
+                  "});",
+                  "pm.test(\"Test event 'title' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('title');",
+                  "});",
+                  "pm.test(\"Test event 'annotation' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('annotation');",
+                  "});",
+                  "pm.test(\"Test event 'category' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('category');",
+                  "});",
+                  "pm.test(\"Test event 'name' paid\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('paid');",
+                  "});",
+                  "pm.test(\"Test event 'eventDate' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('eventDate');",
+                  "});",
+                  "pm.test(\"Test event 'initiator' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('initiator');",
+                  "});",
+                  "pm.test(\"Test event 'description' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('description');",
+                  "});",
+                  "pm.test(\"Test event 'participantLimit' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('participantLimit');",
+                  "});",
+                  "pm.test(\"Test event 'state' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('state');",
+                  "});",
+                  "pm.test(\"Test event 'createdOn' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('createdOn');",
+                  "});",
+                  "pm.test(\"Test event 'location' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('location');",
+                  "});",
+                  "pm.test(\"Test event 'requestModeration' field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('requestModeration');",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"annotation\": \"Event id 2 annotation\",\n\"category\": {{categoryId1}},\n\"description\": \"Event id = 2 description\",\n\"eventDate\": \"2023-05-20 12:00:00\",\n\"location\": {\n\"lat\": 54.999,\n\"lon\": 73.388\n},\n\"paid\": true,\n\"participantLimit\": 10,\n\"requestModeration\": false,\n\"title\": \"Event 2 title\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/:userId/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                ":userId",
+                "events"
+              ],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "{{userId1}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Fail create comment - no params",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 1\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail create comment - event did not publish",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 409\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([409]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 1\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId1}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail create comment - no request body",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 500\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([500]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId1}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Event 1 set published",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has comment create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Has comment create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test comment 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "});",
+              "pm.test(\"Test event 'title' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('title');",
+              "    pm.expect(jsonData.title, '\"Event 1 title\"').to.eql('Event 1 title');",
+              "});",
+              "pm.test(\"Test event 'annotation' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('annotation');",
+              "    pm.expect(jsonData.annotation, 'Event id 1 annotation').to.eql('Event id 1 annotation');",
+              "});",
+              "pm.test(\"Test event 'category' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('category');",
+              "});",
+              "pm.test(\"Test event 'name' paid\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('paid');",
+              "});",
+              "pm.test(\"Test event 'eventDate' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventDate');",
+              "});",
+              "pm.test(\"Test event 'initiator' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('initiator');",
+              "});",
+              "pm.test(\"Test event 'description' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('description');",
+              "});",
+              "pm.test(\"Test event 'participantLimit' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('participantLimit');",
+              "});",
+              "pm.test(\"Test event 'state' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('state');",
+              "});",
+              "pm.test(\"Test event 'createdOn' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('createdOn');",
+              "});",
+              "pm.test(\"Test event 'location' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('location');",
+              "});",
+              "pm.test(\"Test event 'requestModeration' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('requestModeration');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"stateAction\": \"PUBLISH_EVENT\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/events/:eventId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "events",
+            ":eventId"
+          ],
+          "variable": [
+            {
+              "key": "eventId",
+              "value": "{{eventId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Comment 1 create for event 1 from user 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has user create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test user 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.globals.set(\"commentId1\", jsonData.id);",
+              "});",
+              "pm.test(\"Test user 'message' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message, '\"Comment 1 message from user 1\"').to.eql('Comment 1 message from user 1');",
+              "});",
+              "pm.test(\"Test user 'created' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('created');",
+              "});",
+              "pm.test(\"Test user 'eventId' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventId');",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 1 message from user 1\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId1}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail create comment - event 2 did not publish",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 409\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([409]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 2\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId2}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Event 2 set published",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has comment create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Has comment create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test comment 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "});",
+              "pm.test(\"Test event 'title' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('title');",
+              "    pm.expect(jsonData.title, '\"Event 2 title\"').to.eql('Event 2 title');",
+              "});",
+              "pm.test(\"Test event 'annotation' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('annotation');",
+              "    pm.expect(jsonData.annotation, 'Event id 2 annotation').to.eql('Event id 2 annotation');",
+              "});",
+              "pm.test(\"Test event 'category' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('category');",
+              "});",
+              "pm.test(\"Test event 'name' paid\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('paid');",
+              "});",
+              "pm.test(\"Test event 'eventDate' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventDate');",
+              "});",
+              "pm.test(\"Test event 'initiator' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('initiator');",
+              "});",
+              "pm.test(\"Test event 'description' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('description');",
+              "});",
+              "pm.test(\"Test event 'participantLimit' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('participantLimit');",
+              "});",
+              "pm.test(\"Test event 'state' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('state');",
+              "});",
+              "pm.test(\"Test event 'createdOn' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('createdOn');",
+              "});",
+              "pm.test(\"Test event 'location' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('location');",
+              "});",
+              "pm.test(\"Test event 'requestModeration' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('requestModeration');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"stateAction\": \"PUBLISH_EVENT\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/events/:eventId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "events",
+            ":eventId"
+          ],
+          "variable": [
+            {
+              "key": "eventId",
+              "value": "{{eventId2}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Comment 2 create for event 2 from user 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has user create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test user 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.globals.set(\"commentId2\", jsonData.id);",
+              "});",
+              "pm.test(\"Test user 'message' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message, '\"Comment 2 message from user 2\"').to.eql('Comment 2 message from user 2');",
+              "});",
+              "pm.test(\"Test user 'created' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('created');",
+              "});",
+              "pm.test(\"Test user 'eventId' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventId');",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 2 message from user 2\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId2}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId2}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Comment 3 create for event 2 from user 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has user create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test user 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.globals.set(\"commentId3\", jsonData.id);",
+              "});",
+              "pm.test(\"Test user 'message' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message, '\"Comment 3 message from user 3\"').to.eql('Comment 3 message from user 3');",
+              "});",
+              "pm.test(\"Test user 'created' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('created');",
+              "});",
+              "pm.test(\"Test user 'eventId' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventId');",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 3 message from user 3\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId2}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId3}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Comment 4 create for event 2 from user 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has user create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test user 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.globals.set(\"commentId4\", jsonData.id);",
+              "});",
+              "pm.test(\"Test user 'message' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message, '\"Comment 4 message from user 1\"').to.eql('Comment 4 message from user 1');",
+              "});",
+              "pm.test(\"Test user 'created' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('created');",
+              "});",
+              "pm.test(\"Test user 'eventId' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventId');",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Comment 4 message from user 1\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments?eventId={{eventId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "eventId",
+              "value": "{{eventId2}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get comment 1 by id by user 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "pm.test(\"Get comment 1 by user 1\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test user 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.expect(jsonData.id, '\"Id should be 1\"').to.eql(1);",
+              "});",
+              "pm.test(\"Test user 'message' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message, '\"Comment 1 message from user 1\"').to.eql('Comment 1 message from user 1');",
+              "});",
+              "pm.test(\"Test user 'created' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('created');",
+              "});",
+              "pm.test(\"Test user 'eventId' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventId');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments/{{commentId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments",
+            "{{commentId1}}"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail Get comment 1 by id by user 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 409\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([409]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments/{{commentId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments",
+            "{{commentId1}}"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId2}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all comments of user 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "pm.test(\"Get all comments of user 1\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length, 'event count in total').to.eql(2);",
+              "    pm.expect(jsonData[0].message, 'result[0]: \"message\" field').to.eql('Comment 1 message from user 1');",
+              "",
+              "    pm.expect(jsonData[1].message, 'result[1]: \"message\" field').to.eql('Comment 4 message from user 1');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all comments by user 1 by admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "pm.test(\"Get all comments of user 1\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length, 'event count in total').to.eql(2);",
+              "    pm.expect(jsonData[0].message, 'result[0]: \"message\" field').to.eql('Comment 1 message from user 1');",
+              "",
+              "    pm.expect(jsonData[1].message, 'result[1]: \"message\" field').to.eql('Comment 4 message from user 1');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/comments/{{userId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "comments",
+            "{{userId1}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete comment 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([204]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/comments/{{commentId1}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "comments",
+            "{{commentId1}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all comments of user 1 after deleting",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "",
+              "pm.test(\"Get all comments of user 1\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length, 'event count in total').to.eql(1);",
+              "    pm.expect(jsonData[0].message, 'result[1]: \"message\" field').to.eql('Comment 4 message from user 1');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail Update comment 2 - user 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 409\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([409]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Update by user 1 Comment 2 message from user 2\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments/{{commentId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments",
+            "{{commentId2}}"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId1}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update comment 2 by user 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 201\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
+              "});",
+              "pm.test(\"Has user create response\", function () {",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "pm.test(\"Test user 'id' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('id');",
+              "    pm.globals.set(\"commentId2\", jsonData.id);",
+              "});",
+              "pm.test(\"Test user 'message' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('message');",
+              "    pm.expect(jsonData.message, '\"Update by user 2 Comment 2 message from user 2\"').to.eql('Update by user 2 Comment 2 message from user 2');",
+              "});",
+              "pm.test(\"Test user 'created' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('created');",
+              "});",
+              "pm.test(\"Test user 'eventId' field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('eventId');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Update by user 2 Comment 2 message from user 2\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/:userId/comments/{{commentId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            ":userId",
+            "comments",
+            "{{commentId2}}"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "{{userId2}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all comments for event 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "pm.test(\"Get all comments for event 2\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length, 'event count in total').to.eql(3);",
+              "    pm.expect(jsonData[0].message, 'result[0]: \"message\" field').to.eql('Comment 2 message from user 2');",
+              "    pm.expect(jsonData[1].message, 'result[1]: \"message\" field').to.eql('Comment 3 message from user 3');",
+              "    pm.expect(jsonData[2].message, 'result[2]: \"message\" field').to.eql('Comment 4 message from user 1');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/comments/{{eventId2}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "comments",
+            "{{eventId2}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "eventId1",
+      "value": "1"
+    },
+    {
+      "key": "eventId2",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "userId1",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "userId2",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "userId3",
+      "value": "3",
+      "type": "string"
+    },
+    {
+      "key": "categoryId1",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
