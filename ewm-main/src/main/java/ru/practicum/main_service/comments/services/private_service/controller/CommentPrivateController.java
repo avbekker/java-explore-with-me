@@ -5,11 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main_service.comments.dto.CommentDto;
 import ru.practicum.main_service.comments.dto.NewCommentDto;
 import ru.practicum.main_service.comments.services.private_service.service.CommentPrivateService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -18,12 +20,13 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/users/{userId}/comments")
+@Validated
 public class CommentPrivateController {
     private final CommentPrivateService service;
 
     @PostMapping
     public ResponseEntity<CommentDto> create(@PathVariable Long userId, @RequestParam Long eventId,
-                                             @RequestBody NewCommentDto commentDto) {
+                                             @Valid @RequestBody NewCommentDto commentDto) {
         log.info("CommentPrivateController: POST request received for new comment {}, " +
                 "from user id = {} for event id = {}", commentDto, userId, eventId);
         return new ResponseEntity<>(service.create(userId, eventId, commentDto), HttpStatus.CREATED);

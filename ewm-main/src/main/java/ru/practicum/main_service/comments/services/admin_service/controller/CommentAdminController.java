@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main_service.comments.dto.CommentDto;
 import ru.practicum.main_service.comments.services.admin_service.service.CommentAdminService;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/admin/comments/")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class CommentAdminController {
     private final CommentAdminService service;
 
