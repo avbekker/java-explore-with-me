@@ -52,11 +52,10 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
         if (!comment.getCreator().getId().equals(userId)) {
             throw new CommentException("Only creator can update comment.");
         }
-        if (comment.getCreated().isBefore(LocalDateTime.now().minusMinutes(15))) {
+        if (comment.getCreatedOn().isBefore(LocalDateTime.now().minusMinutes(15))) {
             throw new CommentException("Comment cannot be updated later than 15 minutes after posting.");
         }
         comment.setMessage(commentDto.getMessage());
-        comment.setUpdated(LocalDateTime.now());
         log.info("CommentPrivateServiceImpl: Updated comment id = {} by user id = {}", commentId, userId);
         return toCommentDto(comment);
     }

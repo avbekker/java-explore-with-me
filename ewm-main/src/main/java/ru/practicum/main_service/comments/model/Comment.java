@@ -1,6 +1,8 @@
 package ru.practicum.main_service.comments.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.users.model.User;
 
@@ -37,8 +39,10 @@ public class Comment {
     private Event event;
 
     @Column(name = "CREATED")
-    private LocalDateTime created;
+    @CreationTimestamp
+    private LocalDateTime createdOn;
 
     @Column(name = "UPDATED")
-    private LocalDateTime updated;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdatedOn;
 }

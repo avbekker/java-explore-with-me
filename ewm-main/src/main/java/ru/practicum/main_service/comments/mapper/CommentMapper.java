@@ -6,7 +6,6 @@ import ru.practicum.main_service.comments.model.Comment;
 import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.users.model.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,6 @@ public class CommentMapper {
                 .message(newCommentDto.getMessage())
                 .creator(creator)
                 .event(event)
-                .created(LocalDateTime.now())
                 .build();
     }
 
@@ -32,8 +30,8 @@ public class CommentMapper {
                 .message(comment.getMessage())
                 .creator(toUserShortDto(comment.getCreator()))
                 .eventId(comment.getEvent().getId())
-                .created(comment.getCreated())
-                .updated(comment.getUpdated())
+                .createdOn(comment.getCreatedOn())
+                .lastUpdatedOn(comment.getLastUpdatedOn())
                 .build();
     }
 
