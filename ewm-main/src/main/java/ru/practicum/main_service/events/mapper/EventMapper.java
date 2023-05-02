@@ -80,7 +80,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventShortDto toEventShortDto(Event event, Integer confirmedRequests, Long views) {
+    public static EventShortDto toEventShortDto(Event event, Integer confirmedRequests, Long views, Integer comments) {
         return EventShortDto.builder()
                 .id(event.getId())
                 .title(event.getTitle())
@@ -91,6 +91,7 @@ public class EventMapper {
                 .eventDate(event.getEventDate())
                 .initiator(toUserShortDto(event.getInitiator()))
                 .views(views)
+                .comments(comments)
                 .build();
     }
 
@@ -104,10 +105,12 @@ public class EventMapper {
     }
 
     public static List<EventShortDto> toEventShortDtoList(Set<Event> events, Map<String, Long> viewsByEvents,
-                                                          Map<Long, Integer> confirmedRequestsByEvents) {
+                                                          Map<Long, Integer> confirmedRequestsByEvents,
+                                                          Map<Long, Integer> comments) {
         return events.stream()
                 .map(event -> toEventShortDto(event, confirmedRequestsByEvents.getOrDefault(event.getId(), 0),
-                        viewsByEvents.getOrDefault(String.format("/events/%s", event.getId()), 0L)))
+                        viewsByEvents.getOrDefault(String.format("/events/%s", event.getId()), 0L),
+                        comments.getOrDefault(event.getId(), 0)))
                 .collect(Collectors.toList());
     }
 }

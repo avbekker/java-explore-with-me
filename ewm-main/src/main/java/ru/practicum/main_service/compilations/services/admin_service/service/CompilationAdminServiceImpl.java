@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.collaboration.StatsService;
+import ru.practicum.main_service.comments.repository.CommentRepository;
 import ru.practicum.main_service.compilations.dto.CompilationDto;
 import ru.practicum.main_service.compilations.dto.NewCompilationDto;
 import ru.practicum.main_service.compilations.dto.UpdateCompilationRequest;
@@ -17,6 +18,7 @@ import ru.practicum.main_service.events.repository.EventsRepository;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilation;
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDto;
@@ -28,6 +30,7 @@ import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDt
 public class CompilationAdminServiceImpl implements CompilationAdminService {
     private final CompilationRepository compilationRepository;
     private final EventsRepository eventsRepository;
+    private final CommentRepository commentRepository;
     private final StatsService statsService;
 
     @Transactional
@@ -76,6 +79,8 @@ public class CompilationAdminServiceImpl implements CompilationAdminService {
     private List<EventShortDto> getEventShortDtoList(Set<Event> events) {
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
-        return toEventShortDtoList(events, views, confirmationRequests);
+        List<Long> eventsId = events.stream().map(Event::getId).collect(Collectors.toList());
+        Map<Long, Integer> comments = commentRepository.findAllCommentsByEvents(eventsId);
+        return toEventShortDtoList(events, views, confirmationRequests, comments);
     }
 }

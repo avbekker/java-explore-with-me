@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.comments.dto.CommentDto;
 import ru.practicum.main_service.comments.repository.CommentRepository;
 import ru.practicum.main_service.enums.State;
@@ -23,6 +24,7 @@ public class CommentPublicServiceImpl implements CommentPublicService {
     private final CommentRepository commentRepository;
     private final EventsRepository eventRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public List<CommentDto> getByEvent(Long eventId, Integer from, Integer size) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found."));

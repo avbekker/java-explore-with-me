@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.categories.model.Category;
 import ru.practicum.main_service.categories.repository.CategoriesRepository;
 import ru.practicum.main_service.collaboration.StatsService;
+import ru.practicum.main_service.comments.repository.CommentRepository;
 import ru.practicum.main_service.enums.State;
 import ru.practicum.main_service.enums.StateActionUser;
 import ru.practicum.main_service.enums.Status;
@@ -40,6 +41,7 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
     private final UserRepository usersRepository;
     private final CategoriesRepository categoriesRepository;
     private final RequestsRepository requestsRepository;
+    private final CommentRepository commentRepository;
     private final StatsService statsService;
 
     @Transactional(readOnly = true)
@@ -50,8 +52,10 @@ public class EventsPrivateServiceImpl implements EventsPrivateService {
         Set<Event> events = new HashSet<>(eventsRepository.findByInitiator(user, PageRequest.of(from / size, size)).getContent());
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> comments = commentRepository.findAllCommentsByEvents(
+                events.stream().map(Event::getId).collect(Collectors.toList()));
         log.info("EventsPrivateServiceImpl: Get events by user id = {} from {} size {}", userId, from, size);
-        return toEventShortDtoList(events, views, confirmationRequests);
+        return toEventShortDtoList(events, views, confirmationRequests, comments);
     }
 
     @Transactional

@@ -33,6 +33,7 @@ public class CommentMapper {
                 .creator(toUserShortDto(comment.getCreator()))
                 .eventId(comment.getEvent().getId())
                 .created(comment.getCreated())
+                .updated(comment.getUpdated())
                 .build();
     }
 

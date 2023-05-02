@@ -1579,9 +1579,9 @@
               "pm.test(\"Get all comments for event 2\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.length, 'event count in total').to.eql(3);",
-              "    pm.expect(jsonData[0].message, 'result[0]: \"message\" field').to.eql('Comment 2 message from user 2');",
-              "    pm.expect(jsonData[1].message, 'result[1]: \"message\" field').to.eql('Comment 3 message from user 3');",
-              "    pm.expect(jsonData[2].message, 'result[2]: \"message\" field').to.eql('Comment 4 message from user 1');",
+              "    pm.expect(jsonData[0].message, 'result[0]: \"message\" field').to.eql('Comment 3 message from user 3');",
+              "    pm.expect(jsonData[1].message, 'result[1]: \"message\" field').to.eql('Comment 4 message from user 1');",
+              "    pm.expect(jsonData[2].message, 'result[2]: \"message\" field').to.eql('Update by user 2 Comment 2 message from user 2');",
               "});"
             ],
             "type": "text/javascript"

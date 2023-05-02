@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.comments.dto.CommentDto;
 import ru.practicum.main_service.comments.dto.NewCommentDto;
 import ru.practicum.main_service.comments.model.Comment;
@@ -29,6 +30,7 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
     private final UserRepository userRepository;
     private final EventsRepository eventRepository;
 
+    @Transactional
     @Override
     public CommentDto create(Long userId, Long eventId, NewCommentDto commentDto) {
         User creator = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
@@ -42,6 +44,7 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
         return result;
     }
 
+    @Transactional
     @Override
     public CommentDto update(Long userId, Long commentId, NewCommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found."));
@@ -53,10 +56,12 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
             throw new CommentException("Comment cannot be updated later than 15 minutes after posting.");
         }
         comment.setMessage(commentDto.getMessage());
+        comment.setUpdated(LocalDateTime.now());
         log.info("CommentPrivateServiceImpl: Updated comment id = {} by user id = {}", commentId, userId);
         return toCommentDto(comment);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CommentDto getById(Long userId, Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found."));
@@ -68,6 +73,7 @@ public class CommentPrivateServiceImpl implements CommentPrivateService {
         return toCommentDto(comment);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CommentDto> getAll(Long userId, Integer from, Integer size) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));

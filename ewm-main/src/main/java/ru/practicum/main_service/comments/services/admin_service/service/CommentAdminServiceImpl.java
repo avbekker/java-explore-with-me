@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.comments.dto.CommentDto;
 import ru.practicum.main_service.comments.model.Comment;
 import ru.practicum.main_service.comments.repository.CommentRepository;
@@ -21,6 +22,7 @@ public class CommentAdminServiceImpl implements CommentAdminService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public List<CommentDto> getAllByUser(Long userId, Integer from, Integer size) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
@@ -32,6 +34,7 @@ public class CommentAdminServiceImpl implements CommentAdminService {
         return toCommentDtoList(comments);
     }
 
+    @Transactional
     @Override
     public void delete(Long commentId) {
         commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found."));
