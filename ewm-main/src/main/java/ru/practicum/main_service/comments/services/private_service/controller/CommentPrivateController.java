@@ -34,7 +34,7 @@ public class CommentPrivateController {
 
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentDto> update(@PathVariable Long userId, @PathVariable Long commentId,
-                                             @RequestBody NewCommentDto commentDto) {
+                                             @Valid @RequestBody NewCommentDto commentDto) {
         log.info("CommentPrivateController: PATCH request received for update comment id = {}, " +
                 "from user id = {}", commentId, userId);
         return ResponseEntity.ok(service.update(userId, commentId, commentDto));
