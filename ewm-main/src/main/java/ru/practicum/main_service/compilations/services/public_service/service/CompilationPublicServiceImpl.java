@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.collaboration.StatsService;
+import ru.practicum.main_service.comments.repository.CommentRepository;
 import ru.practicum.main_service.compilations.dto.CompilationDto;
 import ru.practicum.main_service.compilations.model.Compilation;
 import ru.practicum.main_service.compilations.repository.CompilationRepository;
@@ -14,6 +15,7 @@ import ru.practicum.main_service.events.model.Event;
 import ru.practicum.main_service.excemptions.NotFoundException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDto;
 import static ru.practicum.main_service.compilations.mapper.CompilationMapper.toCompilationDtoList;
@@ -24,6 +26,7 @@ import static ru.practicum.main_service.events.mapper.EventMapper.toEventShortDt
 @Slf4j
 public class CompilationPublicServiceImpl implements CompilationPublicService {
     private final CompilationRepository compilationRepository;
+    private final CommentRepository commentRepository;
     private final StatsService statsService;
 
     @Transactional(readOnly = true)
@@ -47,7 +50,9 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
         Set<Event> events = compilation.getEvents();
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
-        List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests);
+        Map<Long, Integer> comments = commentRepository.findAllCommentsByEvents(
+                events.stream().map(Event::getId).collect(Collectors.toList()));
+        List<EventShortDto> eventsShortDto = toEventShortDtoList(events, views, confirmationRequests, comments);
         log.info("CompilationPublicServiceImpl: Get compilation by id = {}", id);
         return toCompilationDto(compilation, eventsShortDto);
     }
@@ -57,9 +62,11 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
         compilations.forEach(compilation -> events.addAll(compilation.getEvents()));
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Integer> confirmationRequests = statsService.getRequestsByEvents(events);
+        Map<Long, Integer> comments = commentRepository.findAllCommentsByEvents(
+                events.stream().map(Event::getId).collect(Collectors.toList()));
         Map<Long, List<EventShortDto>> result = new HashMap<>();
         compilations.forEach(compilation -> result.put(compilation.getId(),
-                toEventShortDtoList(compilation.getEvents(), views, confirmationRequests)));
+                toEventShortDtoList(compilation.getEvents(), views, confirmationRequests, comments)));
         return result;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.HitDto;
 import ru.practicum.main_service.collaboration.StatsService;
+import ru.practicum.main_service.comments.repository.CommentRepository;
 import ru.practicum.main_service.enums.Sorting;
 import ru.practicum.main_service.enums.State;
 import ru.practicum.main_service.enums.Status;
@@ -35,6 +36,7 @@ public class EventsPublicServiceImpl implements EventsPublicService {
 
     private final EventsRepository eventsRepository;
     private final RequestsRepository requestsRepository;
+    private final CommentRepository commentRepository;
     private final StatsService statsService;
 
     @Transactional(readOnly = true)
@@ -64,7 +66,9 @@ public class EventsPublicServiceImpl implements EventsPublicService {
         }
         Map<String, Long> views = statsService.getViewsByEvents(new ArrayList<>(events));
         Map<Long, Integer> confirmedRequests = statsService.getRequestsByEvents(events);
-        List<EventShortDto> result = toEventShortDtoList(events, views, confirmedRequests);
+        Map<Long, Integer> comments = commentRepository.findAllCommentsByEvents(
+                events.stream().map(Event::getId).collect(Collectors.toList()));
+        List<EventShortDto> result = toEventShortDtoList(events, views, confirmedRequests, comments);
         if (sort != null) {
             if (sort.equals(Sorting.EVENT_DATE)) {
                 result.sort(Comparator.comparing(EventShortDto::getEventDate));
